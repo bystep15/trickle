@@ -1,0 +1,25 @@
+{
+  "name": "our-fe",
+  "version": "1.0.0",
+  "authors": [
+    "zhengxingcheng <zhengxingcheng@babytree-inc.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~1.11.2",
+    "seajs": "~2.3.0",
+    "hogan": "~3.0.2",
+    "seajs-css": "*",
+    "seajs-text": "https://github.com/seajs/seajs-text.git#~1.1.1",
+    "seajs-combo": "https://github.com/bystep15/seajs-combo.git#~1.1.2",
+    "seajs-flush": "https://github.com/seajs/seajs-flush.git#~1.0.1",
+    "seajs-preload": "https://github.com/seajs/seajs-preload.git"
+  }
+}
