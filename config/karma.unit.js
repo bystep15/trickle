@@ -4,36 +4,33 @@
 module.exports = function (config) {
     config.set({
         // base path, that will be used to resolve files and exclude
-        basePath: '',
+        basePath: '../src/',
 
         // testing framework to use (jasmine/mocha/qunit/...)
         frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
         files: [
-            'client/bower_components/ace-builds/src-min-noconflict/ace.js',
-            'client/bower_components/angular/angular.js',
-            'client/bower_components/angular-mocks/angular-mocks.js',
-            'client/bower_components/angular-resource/angular-resource.js',
-            'client/bower_components/angular-cookies/angular-cookies.js',
-            'client/bower_components/angular-sanitize/angular-sanitize.js',
-            'client/bower_components/angular-route/angular-route.js',
-            'client/bower_components/angular-local-storage/angular-local-storage.js',
-            'client/bower_components/angular-xeditable/dist/js/xeditable.js',
-            'client/bower_components/angular-ui-ace/ui-ace.js',
-            'client/lib/shred.bundle.js',
-            'client/lib/swagger.js',
-            'client/scripts/*.js',
-            'client/scripts/**/*.js',
-            'test/mock/**/*.js',
-            'test/spec/**/*.js'
+            'lib/seajs/2.3.0/sea.js',
+            'lib/seajs-preload/1.0.0/seajs-preload.js',
+            'lib/seajs-css/1.0.4/seajs-css.js',
+            'lib/seajs-text/1.1.1/seajs-text.js',
+            'config.js',
+            '**/test/*.js'
         ],
 
         // list of files / patterns to exclude
-        exclude: [],
+        exclude: [
+        ],
 
         // web server port
         port: 8080,
+
+        urlRoot: '/',
+
+        proxies: {
+            '/project/': 'http://localhost:2999/project/'
+        },
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
@@ -41,7 +38,7 @@ module.exports = function (config) {
 
 
         // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: false,
+        autoWatch: true,
 
 
         // Start these browsers, currently available:
@@ -52,7 +49,7 @@ module.exports = function (config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers: ['Chrome', 'Firefox', 'Safari'],
+        browsers: ['Chrome', /*'Firefox', 'Safari'*/],
 
 
         // Continuous Integration mode

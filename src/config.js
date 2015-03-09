@@ -18,6 +18,7 @@
      * ?dev****
      * &dev****
      */
+    /*
     if (/(?:\?|\&)dev(?:=|&|$)/.test(location.href)) {
 
         //base = seajs.data.base.replace('concat/', 'img/mg/dist/');
@@ -40,5 +41,10 @@
         });
 
     }
+    */
+    seajs.config({
+        alias: alias,
+        base: 'http://localhost:2999/'
+    });
 
 }(this, this.seajs, this.bui));
