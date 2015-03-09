@@ -71,4 +71,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return ISO-8601 格式年份中的第几周，每周从星期一开始 when pass `W`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('19').toBe(format('W', timestamp));
+            done();
+        });
+    });
 });
