@@ -39,6 +39,8 @@ define(function (require, exports, module) {
             return pad(date.getDate());
         case 'D':
             return weekday[date.getDay()].substr(0, 3);
+        case 'l':
+            return weekday[date.getDay()];
         }
     }
     module.exports = format;
