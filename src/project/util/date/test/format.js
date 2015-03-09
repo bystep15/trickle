@@ -64,4 +64,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 年中的第几天,(0到365) when pass `z`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('128').toBe(format('z', timestamp));
+            done();
+        });
+    });
 });
