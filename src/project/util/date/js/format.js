@@ -58,6 +58,18 @@ define(function (require, exports, module) {
 
         w: function (date) {
             return String(date.getDay());
+        },
+
+        z: function (date) {
+            var origin = new Date(date.getTime());
+            origin.setMonth(0);
+            origin.setDate(1);
+            origin.setHours(0);
+            origin.setMinutes(0);
+            origin.setSeconds(0);
+            origin.setMilliseconds(0);
+            console.log(origin);
+            return String(Math.floor((date.getTime() - origin.getTime()) / (24 * 60 * 60 * 1000)));
         }
     };
 
