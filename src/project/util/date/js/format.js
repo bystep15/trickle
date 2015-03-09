@@ -7,7 +7,6 @@
 define(function (require, exports, module) {
 
     function pad(value) {
-        console.log(value);
         if (value < 10) {
             return '0' + value;
         }
@@ -23,8 +22,22 @@ define(function (require, exports, module) {
             throw new Error('timestamp 参数错误');
         }
 
-        var date = new Date(timestamp);
-        return pad(date.getDate());
+        var date = new Date(timestamp),
+            weekday = [
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ];
+        switch(fmt) {
+        case 'd':
+            return pad(date.getDate());
+        case 'D':
+            return weekday[date.getDay()].substr(0, 3);
+        }
     }
     module.exports = format;
 });

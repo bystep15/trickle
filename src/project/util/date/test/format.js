@@ -23,7 +23,7 @@ describe('Util date format module test suite', function () {
         });
     });
 
-    it('should return 星期中的第几天(3 个字母) when pass `D`', function () {
+    it('should return 星期中的第几天(3 个字母) when pass `D`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('Wed').toBe(format('D', timestamp));
             done();
