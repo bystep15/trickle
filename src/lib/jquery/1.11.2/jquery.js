@@ -1,4 +1,4 @@
-define(function (require, module, exports) {
+define(function (require, exports, module) {
 /*!
  * jQuery JavaScript Library v1.11.2
  * http://jquery.com/
