@@ -4,8 +4,18 @@
  * 参考http://php.net/manual/zh/function.date.php
  */
 define(function (require, exports, module) {
-    function format() {
-        return '';
+
+    function pad(value) {
+        console.log(value);
+        if (value < 10) {
+            return '0' + value;
+        }
+        return String(value);
+    }
+
+    function format(fmt, timestamp) {
+        var date = new Date(timestamp);
+        return pad(date.getDate());
     }
     module.exports = format;
 });
