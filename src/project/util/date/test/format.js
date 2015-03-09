@@ -16,6 +16,13 @@ describe('Util date format module test suite', function () {
         });
     });
 
+    it('should return 每月天数后面的英文后缀2 个字符(st，nd，rd 或者 th) when pass `S`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('th').toBe(format('S', timestamp));
+            done();
+        });
+    });
+
     it('should return 月份中的第几天(没有前导零) when pass `j`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('9').toBe(format('j', timestamp));
