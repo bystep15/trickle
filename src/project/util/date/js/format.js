@@ -33,6 +33,8 @@ define(function (require, exports, module) {
                 'Saturday'
             ];
         switch(fmt) {
+        case 'j':
+            return String(date.getDate());
         case 'd':
             return pad(date.getDate());
         case 'D':
