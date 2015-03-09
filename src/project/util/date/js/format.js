@@ -54,6 +54,10 @@ define(function (require, exports, module) {
                 return '7';
             }
             return String(date.getDay());
+        },
+
+        w: function (date) {
+            return String(date.getDay());
         }
     };
 
