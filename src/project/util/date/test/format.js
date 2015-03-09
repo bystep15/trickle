@@ -16,6 +16,13 @@ describe('Util date format module test suite', function () {
         });
     });
 
+    it('should return 月份中的第几天(没有前导零) when pass `j`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('9').toBe(format('j', timestamp));
+            done();
+        });
+    });
+
     it('should return 月份中的第几天(有前导零的2位数字) when pass `d`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('09').toBe(format('d', timestamp));
