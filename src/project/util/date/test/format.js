@@ -36,4 +36,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 星期几(完整的文本格式) when pass `l(小写L)`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('Wednesday').toBe(format('l', timestamp));
+            done();
+        });
+    });
 });
