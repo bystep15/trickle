@@ -6,9 +6,11 @@ describe('Util date format module test suite', function () {
     it('pass timestamp as a error value should throw error', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('09').toBe(format('d', String(timestamp)));
-            expect('09').toBe(format('d', String(timestamp) + 'error'));
             expect(function () {
-                format('d', 'error' + String(timestamp));
+                format('d', -1);
+            }).toThrow();
+            expect(function () {
+                format('d', 'error');
             }).toThrow();
             done();
         });

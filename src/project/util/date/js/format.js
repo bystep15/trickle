@@ -15,6 +15,14 @@ define(function (require, exports, module) {
     }
 
     function format(fmt, timestamp) {
+        if (typeof timestamp !== 'number') {
+            timestamp = Number(timestamp);
+        }
+
+        if (Number.isNaN(timestamp) || timestamp < 0) {
+            throw new Error('timestamp 参数错误');
+        }
+
         var date = new Date(timestamp);
         return pad(date.getDate());
     }
