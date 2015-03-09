@@ -33,6 +33,13 @@ define(function (require, exports, module) {
                 'Saturday'
             ];
         switch(fmt) {
+        case 'S':
+            var suffix = {
+                '1': 'st',
+                '2': 'nd',
+                '3': 'rd'
+            };
+            return suffix[format('d', timestamp)[1]] || 'th';
         case 'j':
             return String(date.getDate());
         case 'd':
