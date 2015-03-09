@@ -43,4 +43,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return ISO-8601 格式数字表示的星期中的第几天,1(星期一)到7(星期天) when pass `N`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('3').toBe(format('N', timestamp));
+            done();
+        });
+    });
 });
