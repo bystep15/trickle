@@ -16,11 +16,13 @@ module.exports = function (config) {
             'lib/seajs-css/1.0.4/seajs-css.js',
             'lib/seajs-text/1.1.1/seajs-text.js',
             'config.js',
+            '**/js/*.js',
             '**/test/*.js'
         ],
 
         // list of files / patterns to exclude
         exclude: [
+            '**/js/*.js'
         ],
 
         // web server port
