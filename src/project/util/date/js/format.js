@@ -41,6 +41,11 @@ define(function (require, exports, module) {
             return weekday[date.getDay()].substr(0, 3);
         case 'l':
             return weekday[date.getDay()];
+        case 'N':
+            if (date.getDay() === 0) {
+                return '7';
+            }
+            return String(date.getDay());
         }
     }
     module.exports = format;
