@@ -13,6 +13,50 @@ define(function (require, exports, module) {
         return String(value);
     }
 
+    var weekday = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ];
+
+    var formator = {
+        S: function (date) {
+            var suffix = {
+                '1': 'st',
+                '2': 'nd',
+                '3': 'rd'
+            };
+            return suffix[format('d', date.getTime())[1]] || 'th';
+        },
+
+        j: function (date) {
+            return String(date.getDate());
+        },
+
+        d: function (date) {
+            return pad(date.getDate());
+        },
+
+        D: function (date) {
+            return weekday[date.getDay()].substr(0, 3);
+        },
+
+        l: function (date) {
+            return weekday[date.getDay()];
+        },
+
+        N: function (date) {
+            if (date.getDay() === 0) {
+                return '7';
+            }
+            return String(date.getDay());
+        }
+    };
+
     function format(fmt, timestamp) {
         if (typeof timestamp !== 'number') {
             timestamp = Number(timestamp);
@@ -22,37 +66,10 @@ define(function (require, exports, module) {
             throw new Error('timestamp 参数错误');
         }
 
-        var date = new Date(timestamp),
-            weekday = [
-                'Sunday',
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday'
-            ];
-        switch(fmt) {
-        case 'S':
-            var suffix = {
-                '1': 'st',
-                '2': 'nd',
-                '3': 'rd'
-            };
-            return suffix[format('d', timestamp)[1]] || 'th';
-        case 'j':
-            return String(date.getDate());
-        case 'd':
-            return pad(date.getDate());
-        case 'D':
-            return weekday[date.getDay()].substr(0, 3);
-        case 'l':
-            return weekday[date.getDay()];
-        case 'N':
-            if (date.getDay() === 0) {
-                return '7';
-            }
-            return String(date.getDay());
+        var date = new Date(timestamp);
+
+        if (formator[fmt]) {
+            return formator[fmt](date);
         }
     }
     module.exports = format;
