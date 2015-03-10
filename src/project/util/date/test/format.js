@@ -91,4 +91,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 月份完整文本格式(例如January) when pass `F`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('May').toBe(format('F', timestamp));
+            done();
+        });
+    });
 });
