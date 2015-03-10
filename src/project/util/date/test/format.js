@@ -182,4 +182,13 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return Swatch Internet 标准时(000到999) when pass `B`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
+            expect('708').toBe(format('B', 1425916800000));
+            expect('644').toBe(format('B', timestamp));
+            done();
+        });
+    });
 });
