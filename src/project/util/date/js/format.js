@@ -169,6 +169,13 @@ define(function (require, exports, module) {
                 // 如果(h-x)为负值，可+24转为正值
                 beat = 1000 * (60 * (60 * ((h - x + 24) % 24) + m) + s) / 86400;
             return String(Math.floor(beat));
+        },
+        g: function (date) {
+            var hour = date.getHours();
+
+            hour = hour % 12;
+
+            return String(hour || 12);
         }
     };
 
