@@ -1,4 +1,5 @@
 describe('Util date format module test suite', function () {
+    'use strict';
 
     // Wed May 09 2018 22:28:22 GMT+0800 (CST)
     var timestamp = 1525876102869;

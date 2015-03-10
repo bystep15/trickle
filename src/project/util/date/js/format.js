@@ -5,6 +5,9 @@
  * 针对1970年以后的日期有效
  */
 define(function (require, exports, module) {
+    'use strict';
+
+    var formator;
 
     function pad(value) {
         if (typeof value === 'string') {
@@ -23,32 +26,45 @@ define(function (require, exports, module) {
         return value;
     }
 
-    var weekday = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday'
-    ];
+    function format(fmt, timestamp) {
+        var date,
+            result,
+            i;
 
-    var month = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
+        if (typeof timestamp !== 'number') {
+            timestamp = Number(timestamp);
+        }
 
-    var formator = {
+        if (timestamp instanceof Date) {
+            date = timestamp;
+        } else if (typeof timestamp === 'number') {
+            if (Number.isNaN(timestamp) || timestamp < 0) {
+                throw new Error('timestamp 参数错误');
+            }
+            date = new Date(timestamp);
+        }
+
+        if (fmt.length > 1) {
+            result = [];
+            for (i = fmt.length - 1; i >= 0; i -= 1) {
+                result.unshift(format(fmt[i], date));
+            }
+
+            return result.join('');
+        }
+
+        if (typeof formator[fmt] === 'function') {
+            return formator[fmt](date);
+        }
+
+        if (typeof formator[fmt] === 'string') {
+            return format(formator[fmt], date);
+        }
+
+        return fmt;
+    }
+
+    formator = {
         S: function (date) {
             var suffix = {
                 '1': 'st',
@@ -71,6 +87,16 @@ define(function (require, exports, module) {
         },
 
         l: function (date) {
+            var weekday = [
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ];
+
             return weekday[date.getDay()];
         },
 
@@ -105,6 +131,21 @@ define(function (require, exports, module) {
         },
 
         F: function (date) {
+            var month = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ];
+
             return month[date.getMonth()];
         },
 
@@ -251,39 +292,5 @@ define(function (require, exports, module) {
         }
     };
 
-    function format(fmt, timestamp) {
-        var date,
-            result,
-            i;
-
-        if (typeof timestamp !== 'number') {
-            timestamp = Number(timestamp);
-        }
-
-        if (timestamp instanceof Date) {
-            date = timestamp;
-        } else if (Number.isNaN(timestamp) || timestamp < 0) {
-            throw new Error('timestamp 参数错误');
-        } else {
-            date = new Date(timestamp);
-        }
-
-        if (fmt.length > 1) {
-            result = [];
-            for (i = fmt.length - 1; i >= 0; i -= 1) {
-                result.unshift(format(fmt[i], date));
-            }
-
-            return result.join('');
-        }
-
-        if (typeof formator[fmt] === 'function') {
-            return formator[fmt](date);
-        } else if (typeof formator[fmt] === 'string') {
-            return format(formator[fmt], date);
-        }
-
-        return fmt;
-    }
     module.exports = format;
 });
