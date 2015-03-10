@@ -130,6 +130,10 @@ define(function (require, exports, module) {
             }
 
             return '0';
+        },
+
+        o: function (date) {
+            return String(date.getFullYear());
         }
     };
 
