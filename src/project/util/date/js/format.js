@@ -138,6 +138,10 @@ define(function (require, exports, module) {
 
         Y: function (date) {
             return String(date.getFullYear());
+        },
+
+        y: function (date) {
+            return String(date.getFullYear()).substr(2, 2);
         }
     };
 
