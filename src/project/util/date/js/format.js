@@ -213,13 +213,15 @@ define(function (require, exports, module) {
         },
 
         O: function (date) {
-            var offset = date.getTimezoneOffset() / 60;
+            var offset = date.getTimezoneOffset() / 60,
+                prefix = '-';
 
             if (offset < 0) {
-                return '+' + pad(Math.floor(-offset)) + '00';
-            } else {
-                return '-' + pad(Math.floor(offset)) + '00';
+                prefix = '+';
+                offset = -offset;
             }
+
+            return prefix + pad(Math.floor(offset)) + '00';
         },
 
         P: function (date) {
