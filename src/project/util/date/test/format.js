@@ -161,6 +161,8 @@ describe('Util date format module test suite', function () {
         seajs.use('/project/util/date/js/format', function (format) {
             // Tue Mar 10 2015 10:04:12 GMT+0800 (CST)
             expect('am').toBe(format('a', 1425953052671));
+            // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
+            expect('am').toBe(format('a', 1425916800000));
             // Tue Mar 10 2015 12:00:00 GMT+0800 (CST)
             expect('pm').toBe(format('a', 1425960000000));
             expect('pm').toBe(format('a', timestamp));
