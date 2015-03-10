@@ -142,4 +142,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should 4位数字完整表示的年份 when pass `Y`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('2018').toBe(format('Y', timestamp));
+            done();
+        });
+    });
 });
