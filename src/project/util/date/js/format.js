@@ -189,6 +189,10 @@ define(function (require, exports, module) {
 
             return String(pad(hour || 12));
         },
+
+        H: function (date) {
+            return pad(date.getHours());
+        }
     };
 
     function format(fmt, timestamp) {
