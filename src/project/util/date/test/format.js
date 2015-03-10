@@ -135,4 +135,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return ISO-8601 格式年份数字 when pass `o`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('2018').toBe(format('o', timestamp));
+            done();
+        });
+    });
 });
