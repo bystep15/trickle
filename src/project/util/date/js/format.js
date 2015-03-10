@@ -243,17 +243,26 @@ define(function (require, exports, module) {
 
         c: function (date) {
             // 2018-05-09T22:28:22+08:00
-            var time = date.getTime();
-            return format('Y', time) + '-' + format('m', time) + '-' + format('d', time) + 'T' + format('H', time) + ':' + format('i', time) + ':' + format('s', time) + format('P', time);
+            var time = date.getTime(),
+                fmt = 'Y-m-dTH:i:sP',
+                result = [];
+            for (var i = 0, len = fmt.length; i < len; i += 1) {
+                result.push(format(fmt[i], time));
+            }
+
+            return result.join('');
         },
 
         r: function (date) {
             // Wed, 09 May 2018 22:28:22 +0800
-            var time = date.getTime();
-            return format('D', time) + ', ' +
-                format('d', time) + ' ' + format('M', time) + ' ' + format('Y', time) + ' ' +
-                format('H', time) + ':' + format('i', time) + ':' + format('s', time) + ' ' +
-                format('O', time);
+            var time = date.getTime(),
+                fmt = 'D, d M Y H:i:s O',
+                result = [];
+            for (var i = 0, len = fmt.length; i < len; i += 1) {
+                result.push(format(fmt[i], time));
+            }
+
+            return result.join('');
         },
 
         U: function (date) {
@@ -275,6 +284,8 @@ define(function (require, exports, module) {
         if (formator[fmt]) {
             return formator[fmt](date);
         }
+
+        return fmt;
     }
     module.exports = format;
 });
