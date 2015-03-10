@@ -98,4 +98,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 数字表示的月份(有前导零,01到12) when pass `m`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('05').toBe(format('m', timestamp));
+            done();
+        });
+    });
 });
