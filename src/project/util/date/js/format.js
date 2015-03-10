@@ -23,6 +23,21 @@ define(function (require, exports, module) {
         'Saturday'
     ];
 
+    var month = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ];
+
     var formator = {
         S: function (date) {
             var suffix = {
@@ -77,6 +92,10 @@ define(function (require, exports, module) {
                 N = Number(format('N', time));
 
             return pad(Math.ceil((z - N) / 7) + 1);
+        },
+
+        F: function (date) {
+            return month[date.getMonth()];
         }
     };
 
