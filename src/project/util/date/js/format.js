@@ -142,6 +142,13 @@ define(function (require, exports, module) {
 
         y: function (date) {
             return String(date.getFullYear()).substr(2, 2);
+        },
+
+        a: function (date) {
+            if (date.getHours() < 12) {
+                return 'am';
+            }
+            return 'pm';
         }
     };
 
