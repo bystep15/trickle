@@ -149,4 +149,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should 2位数字表示的年份 when pass `y`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('18').toBe(format('y', timestamp));
+            done();
+        });
+    });
 });
