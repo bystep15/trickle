@@ -128,4 +128,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 是否为闰年(闰年为1，否则为0) when pass `L`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('0').toBe(format('L', timestamp));
+            done();
+        });
+    });
 });
