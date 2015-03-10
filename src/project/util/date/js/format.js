@@ -134,6 +134,10 @@ define(function (require, exports, module) {
 
         o: function (date) {
             return String(date.getFullYear());
+        },
+
+        Y: function (date) {
+            return String(date.getFullYear());
         }
     };
 
