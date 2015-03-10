@@ -96,6 +96,10 @@ define(function (require, exports, module) {
 
         F: function (date) {
             return month[date.getMonth()];
+        },
+
+        m: function (date) {
+            return pad(date.getMonth() + 1);
         }
     };
 
