@@ -58,7 +58,7 @@ describe('Util date format module test suite', function () {
         });
     });
 
-    it('should return 星期中的第几天,1(星期一)到7(星期天) when pass `w`', function (done) {
+    it('should return 星期中的第几天,0(星期天)到6(星期六) when pass `w`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('3').toBe(format('w', timestamp));
             done();
@@ -67,6 +67,12 @@ describe('Util date format module test suite', function () {
 
     it('should return 年中的第几天,(0到365) when pass `z`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
+            // Thu Jan 01 2015 00:00:00 GMT+0800 (CST)
+            expect('0').toBe(format('z', 1420041600000));
+            // Sun Jan 04 2015 00:00:00 GMT+0800 (CST)
+            expect('3').toBe(format('z', 1420300800000));
+            // Mon Jan 05 2015 00:00:00 GMT+0800 (CST)
+            expect('4').toBe(format('z', 1420387200000));
             expect('128').toBe(format('z', timestamp));
             done();
         });
@@ -74,6 +80,13 @@ describe('Util date format module test suite', function () {
 
     it('should return ISO-8601 格式年份中的第几周，每周从星期一开始 when pass `W`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
+            // Thu Jan 01 2015 00:00:00 GMT+0800 (CST)
+            expect('01').toBe(format('W', 1420041600000));
+            // Sun Jan 04 2015 00:00:00 GMT+0800 (CST)
+            expect('01').toBe(format('W', 1420300800000));
+            expect('01').toBe(format('W', 1420300800001));
+            // Mon Jan 05 2015 00:00:00 GMT+0800 (CST)
+            expect('02').toBe(format('W', 1420387200000));
             expect('19').toBe(format('W', timestamp));
             done();
         });
