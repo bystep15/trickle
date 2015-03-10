@@ -121,4 +121,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 给定月份所应有的天数(28到31) when pass `t`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('31').toBe(format('t', timestamp));
+            done();
+        });
+    });
 });
