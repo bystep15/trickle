@@ -29,3 +29,5 @@ bower_components
 node_modules
 .build
 dist
+
+*.php
