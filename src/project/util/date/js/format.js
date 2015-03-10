@@ -104,6 +104,10 @@ define(function (require, exports, module) {
 
         m: function (date) {
             return pad(date.getMonth() + 1);
+        },
+
+        n: function (date) {
+            return String(date.getMonth() + 1);
         }
     };
 
