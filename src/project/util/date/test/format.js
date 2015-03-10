@@ -245,4 +245,15 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 有前导零的分钟数 when pass `i`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            // Tue Mar 10 2015 10:04:12 GMT+0800 (CST)
+            expect('04').toBe(format('i', 1425953052671));
+            // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
+            expect('00').toBe(format('i', 1425916800000));
+            expect('28').toBe(format('i', timestamp));
+            done();
+        });
+    });
 });
