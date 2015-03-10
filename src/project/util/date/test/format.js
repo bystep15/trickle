@@ -191,4 +191,17 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 12小时格式(没有前导零,1到12) when pass `g`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            // Tue Mar 10 2015 10:04:12 GMT+0800 (CST)
+            expect('10').toBe(format('g', 1425953052671));
+            // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
+            expect('12').toBe(format('g', 1425916800000));
+            // Tue Mar 10 2015 12:00:00 GMT+0800 (CST)
+            expect('12').toBe(format('g', 1425960000000));
+            expect('10').toBe(format('g', timestamp));
+            done();
+        });
+    });
 });
