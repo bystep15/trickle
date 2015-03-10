@@ -202,6 +202,10 @@ define(function (require, exports, module) {
 
         i: function (date) {
             return pad(date.getMinutes());
+        },
+
+        s: function (date) {
+            return pad(date.getSeconds());
         }
     };
 
