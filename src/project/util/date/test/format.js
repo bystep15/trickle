@@ -309,4 +309,14 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 自定义格式', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('2018-05-09T22:28:22+08:00').toBe(format('Y-m-dTH:i:sP', timestamp));
+            expect('Wed, 09 May 2018 22:28:22 +0800').toBe(format('D, d M Y H:i:s O', timestamp));
+            expect('2018-05-09').toBe(format('Y-m-d', timestamp));
+            expect('Wed, 09 May 2018').toBe(format('D, d M Y', timestamp));
+            done();
+        });
+    });
 });
