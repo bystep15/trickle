@@ -7,10 +7,20 @@
 define(function (require, exports, module) {
 
     function pad(value) {
-        if (value < 10) {
-            return '0' + value;
+        if (typeof value === 'string') {
+            if (value.length === 1) {
+                return '0' + value;
+            }
         }
-        return String(value);
+
+        if (typeof value === 'number') {
+            if (value < 10) {
+                return '0' + value;
+            }
+            return String(value);
+        }
+
+        return value;
     }
 
     var weekday = [
@@ -57,7 +67,7 @@ define(function (require, exports, module) {
         },
 
         D: function (date) {
-            return weekday[date.getDay()].substr(0, 3);
+            return format('l', date.getTime()).substr(0, 3);
         },
 
         l: function (date) {
@@ -99,7 +109,7 @@ define(function (require, exports, module) {
         },
 
         M: function (date) {
-            return month[date.getMonth()].substr(0, 3);
+            return format('F', date.getTime()).substr(0, 3);
         },
 
         m: function (date) {
@@ -183,11 +193,7 @@ define(function (require, exports, module) {
         },
 
         h: function (date) {
-            var hour = date.getHours();
-
-            hour = hour % 12;
-
-            return String(pad(hour || 12));
+            return pad(format('g', date.getTime()));
         },
 
         H: function (date) {
