@@ -55,7 +55,7 @@ define(function (require, exports, module) {
                 '2': 'nd',
                 '3': 'rd'
             };
-            return suffix[format('d', date.getTime())[1]] || 'th';
+            return suffix[format('d', date)[1]] || 'th';
         },
 
         j: function (date) {
@@ -67,7 +67,7 @@ define(function (require, exports, module) {
         },
 
         D: function (date) {
-            return format('l', date.getTime()).substr(0, 3);
+            return format('l', date).substr(0, 3);
         },
 
         l: function (date) {
@@ -109,7 +109,7 @@ define(function (require, exports, module) {
         },
 
         M: function (date) {
-            return format('F', date.getTime()).substr(0, 3);
+            return format('F', date).substr(0, 3);
         },
 
         m: function (date) {
@@ -162,7 +162,7 @@ define(function (require, exports, module) {
         },
 
         A: function (date) {
-            return format('a', date.getTime()).toUpperCase();
+            return format('a', date).toUpperCase();
         },
 
         // http://zh.wikipedia.org/wiki/Swatch網際網路時間
@@ -193,7 +193,7 @@ define(function (require, exports, module) {
         },
 
         h: function (date) {
-            return pad(format('g', date.getTime()));
+            return pad(format('g', date));
         },
 
         H: function (date) {
@@ -243,12 +243,12 @@ define(function (require, exports, module) {
 
         c: function (date) {
             // 2018-05-09T22:28:22+08:00
-            return format('Y-m-dTH:i:sP', date.getTime());
+            return format('Y-m-dTH:i:sP', date);
         },
 
         r: function (date) {
             // Wed, 09 May 2018 22:28:22 +0800
-            return format('D, d M Y H:i:s O', date.getTime());
+            return format('D, d M Y H:i:s O', date);
         },
 
         U: function (date) {
@@ -257,20 +257,26 @@ define(function (require, exports, module) {
     };
 
     function format(fmt, timestamp) {
+        var date,
+            result,
+            i;
+
         if (typeof timestamp !== 'number') {
             timestamp = Number(timestamp);
         }
 
-        if (Number.isNaN(timestamp) || timestamp < 0) {
+        if (timestamp instanceof Date) {
+            date = timestamp;
+        } else if (Number.isNaN(timestamp) || timestamp < 0) {
             throw new Error('timestamp 参数错误');
+        } else {
+            date = new Date(timestamp);
         }
 
-        var date = new Date(timestamp);
-
         if (fmt.length > 1) {
-            var result = [];
-            for (var i = 0, len = fmt.length; i < len; i += 1) {
-                result.push(format(fmt[i], timestamp));
+            result = [];
+            for (i = fmt.length - 1; i >= 0; i -= 1) {
+                result.unshift(format(fmt[i], date));
             }
 
             return result.join('');
