@@ -243,26 +243,12 @@ define(function (require, exports, module) {
 
         c: function (date) {
             // 2018-05-09T22:28:22+08:00
-            var time = date.getTime(),
-                fmt = 'Y-m-dTH:i:sP',
-                result = [];
-            for (var i = 0, len = fmt.length; i < len; i += 1) {
-                result.push(format(fmt[i], time));
-            }
-
-            return result.join('');
+            return format('Y-m-dTH:i:sP', date.getTime());
         },
 
         r: function (date) {
             // Wed, 09 May 2018 22:28:22 +0800
-            var time = date.getTime(),
-                fmt = 'D, d M Y H:i:s O',
-                result = [];
-            for (var i = 0, len = fmt.length; i < len; i += 1) {
-                result.push(format(fmt[i], time));
-            }
-
-            return result.join('');
+            return format('D, d M Y H:i:s O', date.getTime());
         },
 
         U: function (date) {
@@ -280,6 +266,15 @@ define(function (require, exports, module) {
         }
 
         var date = new Date(timestamp);
+
+        if (fmt.length > 1) {
+            var result = [];
+            for (var i = 0, len = fmt.length; i < len; i += 1) {
+                result.push(format(fmt[i], timestamp));
+            }
+
+            return result.join('');
+        }
 
         if (formator[fmt]) {
             return formator[fmt](date);
