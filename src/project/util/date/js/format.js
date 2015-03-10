@@ -220,6 +220,23 @@ define(function (require, exports, module) {
             } else {
                 return '-' + pad(Math.floor(offset)) + '00';
             }
+        },
+
+        P: function (date) {
+            var offset = date.getTimezoneOffset(),
+                prefix = '-',
+                hour,
+                minute;
+
+            if (offset < 0) {
+                offset = -offset;
+                prefix = '+';
+            }
+
+            hour = pad(Math.floor(offset / 60));
+            minute = pad(offset % 60);
+
+            return prefix + hour + ':' + minute;
         }
     };
 
