@@ -108,6 +108,17 @@ define(function (require, exports, module) {
 
         n: function (date) {
             return String(date.getMonth() + 1);
+        },
+
+        t: function (date) {
+            var nextMonth = new Date(date.getTime());
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+            nextMonth.setDate(1);
+            nextMonth.setHours(0);
+            nextMonth.setMinutes(0);
+            nextMonth.setSeconds(0);
+            nextMonth.setMilliseconds(0);
+            return String(new Date(nextMonth.getTime() - 1).getDate());
         }
     };
 
