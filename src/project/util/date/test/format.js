@@ -210,7 +210,7 @@ describe('Util date format module test suite', function () {
             // Tue Mar 10 2015 10:04:12 GMT+0800 (CST)
             expect('10').toBe(format('G', 1425953052671));
             // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
-            expect('00').toBe(format('G', 1425916800000));
+            expect('0').toBe(format('G', 1425916800000));
             // Tue Mar 10 2015 12:00:00 GMT+0800 (CST)
             expect('12').toBe(format('G', 1425960000000));
             expect('22').toBe(format('G', timestamp));
