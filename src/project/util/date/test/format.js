@@ -169,4 +169,17 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 大写的上午和下午值(AM或PM) when pass `A`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            // Tue Mar 10 2015 10:04:12 GMT+0800 (CST)
+            expect('AM').toBe(format('A', 1425953052671));
+            // Tue Mar 10 2015 00:00:00 GMT+0800 (CST)
+            expect('AM').toBe(format('A', 1425916800000));
+            // Tue Mar 10 2015 12:00:00 GMT+0800 (CST)
+            expect('PM').toBe(format('A', 1425960000000));
+            expect('PM').toBe(format('A', timestamp));
+            done();
+        });
+    });
 });
