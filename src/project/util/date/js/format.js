@@ -254,6 +254,10 @@ define(function (require, exports, module) {
                 format('d', time) + ' ' + format('M', time) + ' ' + format('Y', time) + ' ' +
                 format('H', time) + ':' + format('i', time) + ':' + format('s', time) + ' ' +
                 format('O', time);
+        },
+
+        U: function (date) {
+            return String(Math.floor(date.getTime() / 1000));
         }
     };
 
