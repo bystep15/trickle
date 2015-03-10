@@ -288,4 +288,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return ISO 8601 格式的日期 when pass `c`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('2018-05-09T22:28:22+08:00').toBe(format('c', timestamp));
+            done();
+        });
+    });
 });
