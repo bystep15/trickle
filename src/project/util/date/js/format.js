@@ -241,15 +241,10 @@ define(function (require, exports, module) {
             return prefix + hour + ':' + minute;
         },
 
-        c: function (date) {
-            // 2018-05-09T22:28:22+08:00
-            return format('Y-m-dTH:i:sP', date);
-        },
+        // 2018-05-09T22:28:22+08:00
+        c: 'Y-m-dTH:i:sP',
 
-        r: function (date) {
-            // Wed, 09 May 2018 22:28:22 +0800
-            return format('D, d M Y H:i:s O', date);
-        },
+        r: 'D, d M Y H:i:s O',
 
         U: function (date) {
             return String(Math.floor(date.getTime() / 1000));
@@ -282,8 +277,10 @@ define(function (require, exports, module) {
             return result.join('');
         }
 
-        if (formator[fmt]) {
+        if (typeof formator[fmt] === 'function') {
             return formator[fmt](date);
+        } else if (typeof formator[fmt] === 'string') {
+            return format(formator[fmt], date);
         }
 
         return fmt;
