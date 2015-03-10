@@ -267,4 +267,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 时区标识 when pass `e`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('GMT').toBe(format('e', timestamp));
+            done();
+        });
+    });
 });
