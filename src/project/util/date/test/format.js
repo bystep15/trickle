@@ -275,6 +275,13 @@ describe('Util date format module test suite', function () {
         });
     });
 
+    it('should return 与格林威治时间(GMT)的差别,小时和分钟之间有冒号分隔 when pass `P`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('+08:00').toBe(format('P', timestamp));
+            done();
+        });
+    });
+
     it('should return 与格林威治时间相差的小时数 when pass `O`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('+0800').toBe(format('O', timestamp));
