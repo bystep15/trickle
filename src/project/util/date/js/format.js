@@ -245,6 +245,15 @@ define(function (require, exports, module) {
             // 2018-05-09T22:28:22+08:00
             var time = date.getTime();
             return format('Y', time) + '-' + format('m', time) + '-' + format('d', time) + 'T' + format('H', time) + ':' + format('i', time) + ':' + format('s', time) + format('P', time);
+        },
+
+        r: function (date) {
+            // Wed, 09 May 2018 22:28:22 +0800
+            var time = date.getTime();
+            return format('D', time) + ', ' +
+                format('d', time) + ' ' + format('M', time) + ' ' + format('Y', time) + ' ' +
+                format('H', time) + ':' + format('i', time) + ':' + format('s', time) + ' ' +
+                format('O', time);
         }
     };
 
