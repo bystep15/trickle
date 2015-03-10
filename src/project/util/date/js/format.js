@@ -98,6 +98,10 @@ define(function (require, exports, module) {
             return month[date.getMonth()];
         },
 
+        M: function (date) {
+            return month[date.getMonth()].substr(0, 3);
+        },
+
         m: function (date) {
             return pad(date.getMonth() + 1);
         }
