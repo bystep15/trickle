@@ -302,4 +302,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 从Unix纪元(January 1 1970 00:00:00 GMT)开始至今的秒数 when pass `U`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('1525876102').toBe(format('U', timestamp));
+            done();
+        });
+    });
 });
