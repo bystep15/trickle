@@ -206,6 +206,10 @@ define(function (require, exports, module) {
 
         s: function (date) {
             return pad(date.getSeconds());
+        },
+
+        e: function (date) {
+            return 'GMT';
         }
     };
 
