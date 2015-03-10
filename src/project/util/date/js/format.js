@@ -68,8 +68,15 @@ define(function (require, exports, module) {
             origin.setMinutes(0);
             origin.setSeconds(0);
             origin.setMilliseconds(0);
-            console.log(origin);
             return String(Math.floor((date.getTime() - origin.getTime()) / (24 * 60 * 60 * 1000)));
+        },
+
+        W: function (date) {
+            var time = date.getTime(),
+                z = Number(format('z', time)),
+                N = Number(format('N', time));
+
+            return pad(Math.ceil((z - N) / 7) + 1);
         }
     };
 
