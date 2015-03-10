@@ -274,4 +274,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 与格林威治时间相差的小时数 when pass `O`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('+0800').toBe(format('O', timestamp));
+            done();
+        });
+    });
 });
