@@ -176,6 +176,10 @@ define(function (require, exports, module) {
             hour = hour % 12;
 
             return String(hour || 12);
+        },
+
+        G: function (date) {
+            return String(date.getHours());
         }
     };
 
