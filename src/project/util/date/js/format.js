@@ -198,6 +198,10 @@ define(function (require, exports, module) {
 
         H: function (date) {
             return pad(date.getHours());
+        },
+
+        i: function (date) {
+            return pad(date.getMinutes());
         }
     };
 
