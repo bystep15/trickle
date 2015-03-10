@@ -119,6 +119,17 @@ define(function (require, exports, module) {
             nextMonth.setSeconds(0);
             nextMonth.setMilliseconds(0);
             return String(new Date(nextMonth.getTime() - 1).getDate());
+        },
+
+        L: function (date) {
+            var year = date.getFullYear();
+
+            if ((year % 4 === 0 && year % 100 !== 0) ||
+                    (year % 400 === 0)) {
+                return '1';
+            }
+
+            return '0';
         }
     };
 
