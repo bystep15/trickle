@@ -114,4 +114,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return 数字表示的月份(没有前导零,1到12) when pass `n`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('5').toBe(format('n', timestamp));
+            done();
+        });
+    });
 });
