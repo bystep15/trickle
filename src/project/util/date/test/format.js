@@ -295,4 +295,11 @@ describe('Util date format module test suite', function () {
             done();
         });
     });
+
+    it('should return RFC 822 格式的日期 when pass `r`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            expect('Wed, 09 May 2018 22:28:22 +0800').toBe(format('r', timestamp));
+            done();
+        });
+    });
 });
