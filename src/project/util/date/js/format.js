@@ -210,6 +210,16 @@ define(function (require, exports, module) {
 
         e: function (date) {
             return 'GMT';
+        },
+
+        O: function (date) {
+            var offset = date.getTimezoneOffset() / 60;
+
+            if (offset < 0) {
+                return '+' + pad(Math.floor(-offset)) + '00';
+            } else {
+                return '-' + pad(Math.floor(offset)) + '00';
+            }
         }
     };
 
