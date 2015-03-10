@@ -99,6 +99,15 @@ describe('Util date format module test suite', function () {
         });
     });
 
+    it('should return 三个字母缩写表示的月份 when pass `M`', function (done) {
+        seajs.use('/project/util/date/js/format', function (format) {
+            // Thu Jan 01 2015 00:00:00 GMT+0800 (CST)
+            expect('Jan').toBe(format('M', 1420041600000));
+            expect('May').toBe(format('M', timestamp));
+            done();
+        });
+    });
+
     it('should return 数字表示的月份(有前导零,01到12) when pass `m`', function (done) {
         seajs.use('/project/util/date/js/format', function (format) {
             expect('05').toBe(format('m', timestamp));
