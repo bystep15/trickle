@@ -180,7 +180,15 @@ define(function (require, exports, module) {
 
         G: function (date) {
             return String(date.getHours());
-        }
+        },
+
+        h: function (date) {
+            var hour = date.getHours();
+
+            hour = hour % 12;
+
+            return String(pad(hour || 12));
+        },
     };
 
     function format(fmt, timestamp) {
