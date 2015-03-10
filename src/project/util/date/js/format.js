@@ -239,6 +239,12 @@ define(function (require, exports, module) {
             minute = pad(offset % 60);
 
             return prefix + hour + ':' + minute;
+        },
+
+        c: function (date) {
+            // 2018-05-09T22:28:22+08:00
+            var time = date.getTime();
+            return format('Y', time) + '-' + format('m', time) + '-' + format('d', time) + 'T' + format('H', time) + ':' + format('i', time) + ':' + format('s', time) + format('P', time);
         }
     };
 
