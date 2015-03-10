@@ -153,6 +153,22 @@ define(function (require, exports, module) {
 
         A: function (date) {
             return format('a', date.getTime()).toUpperCase();
+        },
+
+        // http://zh.wikipedia.org/wiki/Swatch網際網路時間
+        B: function (date) {
+            // 所在时区与UTC+1的时差
+            // 将UTC+8换算成Beat时，上述x以7代入
+            var x = 7,
+                // 所在时区的小时(24时制)
+                h = date.getHours(),
+                // 所在时区的分钟
+                m = date.getMinutes(),
+                // 所在时区的秒数
+                s = date.getSeconds(),
+                // 如果(h-x)为负值，可+24转为正值
+                beat = 1000 * (60 * (60 * ((h - x + 24) % 24) + m) + s) / 86400;
+            return String(Math.floor(beat));
         }
     };
 
