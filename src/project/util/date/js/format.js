@@ -149,6 +149,10 @@ define(function (require, exports, module) {
                 return 'am';
             }
             return 'pm';
+        },
+
+        A: function (date) {
+            return format('a', date.getTime()).toUpperCase();
         }
     };
 
