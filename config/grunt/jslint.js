@@ -20,6 +20,7 @@ module.exports = {
             ]
         },
         exclude: [
+            'src/project/**/referance/**/*.js'
         ],
         options: {
             edition: 'latest'
