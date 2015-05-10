@@ -31,12 +31,12 @@ define(function (require, exports, module) {
      * https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/isNaN
      * https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
      */
-    function isNaN(number) {
+    function isNumberNaN(number) {
         if (Number.isNaN) {
             return Number.isNaN(number);
         }
 
-        return number !== number;
+        return typeof number === 'number' && window.isNaN(number);
     }
 
     function format(fmt, timestamp) {
@@ -51,7 +51,7 @@ define(function (require, exports, module) {
         if (timestamp instanceof Date) {
             date = timestamp;
         } else if (typeof timestamp === 'number') {
-            if (isNaN(timestamp) || timestamp < 0) {
+            if (isNumberNaN(timestamp) || timestamp < 0) {
                 throw new Error('timestamp 参数错误');
             }
             date = new Date(timestamp);
