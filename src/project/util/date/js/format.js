@@ -26,6 +26,19 @@ define(function (require, exports, module) {
         return value;
     }
 
+    /*
+     * 参考
+     * https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/isNaN
+     * https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
+     */
+    function isNaN(number) {
+        if (Number.isNaN) {
+            return Number.isNaN(number);
+        }
+
+        return number !== number;
+    }
+
     function format(fmt, timestamp) {
         var date,
             result,
@@ -38,7 +51,7 @@ define(function (require, exports, module) {
         if (timestamp instanceof Date) {
             date = timestamp;
         } else if (typeof timestamp === 'number') {
-            if (Number.isNaN(timestamp) || timestamp < 0) {
+            if (isNaN(timestamp) || timestamp < 0) {
                 throw new Error('timestamp 参数错误');
             }
             date = new Date(timestamp);
