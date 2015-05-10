@@ -17,7 +17,7 @@ module.exports = function (config) {
             'lib/seajs-text/1.1.1/seajs-text.js',
             'config.js',
             '**/js/*.js',
-            '**/test/*.js'
+            '**/test/*Spec.js'
         ],
 
         // list of files / patterns to exclude
