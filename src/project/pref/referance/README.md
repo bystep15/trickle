@@ -1,0 +1,120 @@
+1. [Timing and Performance APIs](http://msdn.microsoft.com/en-us/library/ie/hh772738(v=vs.85).aspx)
+2. [导航计时](http://msdn.microsoft.com/library/ie/hh673552)
+
+<table>
+    <caption>常用对象</caption>
+    <tbody>
+        <tr>
+            <th>performance</th>
+            <td>对窗口的性能对象的引用。</td>
+        </tr>
+        <tr>
+            <th>timing</th>
+            <td>性能计时对象的引用。</td>
+        </tr>
+        <tr>
+            <th>navigation</th>
+            <td>性能导航对象的引用。</td>
+        </tr>
+    </tbody>
+</table>
+
+<table>
+    <caption>导航计时常用属性（PerformanceTiming' properties）</caption>
+    <thead>
+        <tr>
+            <th>属性</th>
+            <th>描述</th>
+        </tr>
+    </thead>
+    <tbody>
+                <tr>
+            <th>connectEnd</th>
+            <td>服务器连接完成的时间。</td>
+        </tr>
+        <tr>
+            <th>connectStart</th>
+            <td>服务器连接即将开始的时间。</td>
+        </tr>
+        <tr>
+            <th>domComplete</th>
+            <td>文档准备工作即将完成的时间。</td>
+        </tr>
+        <tr>
+            <th>domContentLoadedEventEnd</th>
+            <td>DOMContentLoaded 事件完成的时间。</td>
+        </tr>
+        <tr>
+            <th>domContentLoadedEventStart</th>
+            <td>DOMContentLoaded 即将开始的时间。</td>
+        </tr>
+        <tr>
+            <th>domInteractive</th>
+            <td>准备状态即将被设置为 interactive 的时间。</td>
+        </tr>
+        <tr>
+            <th>domLoading</th>
+            <td>准备状态即将被设置为 loading 的时间。</td>
+        </tr>
+        <tr>
+            <th>domainLookupEnd</th>
+            <td>域名查找完成的时间。</td>
+        </tr>
+        <tr>
+            <th>domainLookupStart</th>
+            <td>即将开始域名查找的时间。</td>
+        </tr>
+        <tr>
+            <th>fetchStart</th>
+            <td>开始获取资源的时间。</td>
+        </tr>
+        <tr>
+            <th>loadEventEnd</th>
+            <td>加载事件完成的时间。</td>
+        </tr>
+        <tr>
+            <th>loadEventStart</th>
+            <td>即将触发加载事件的时间。</td>
+        </tr>
+        <tr>
+            <th>navigationStart</th>
+            <td>前一个文档开始卸载的时间。</td>
+        </tr>
+        <tr>
+            <th>redirectCount</th>
+            <td>自上次非重定向以来的重定向次数。</td>
+        </tr>
+        <tr>
+            <th>redirectEnd</th>
+            <td>上一次重定向响应结束的时间。</td>
+        </tr>
+        <tr>
+            <th>redirectStart</th>
+            <td>启动一个重定向的获取的时间。</td>
+        </tr>
+        <tr>
+            <th>requestStart</th>
+            <td>服务器请求即将开始的时间。</td>
+        </tr>
+        <tr>
+            <th>responseEnd</th>
+            <td>响应或连接结束的时间。</td>
+        </tr>
+        <tr>
+            <th>responseStart</th>
+            <td>即将开始响应的时间。</td>
+        </tr>
+        <tr>
+            <th>type</th>
+            <td>上一次非重定向导航事件的类型。</td>
+        </tr>
+        <tr>
+            <th>unloadEventEnd</th>
+            <td>卸载完前一个文档的时间。</td>
+        </tr>
+        <tr>
+            <th>unloadEventStart</th>
+            <td>即将触发卸载事件的时间。</td>
+        </tr>
+    </tbody>
+</table>

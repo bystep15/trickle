@@ -1,0 +1,117 @@
+#loadFrame {
+    display: none;
+}
+
+div.outercontainer {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    font: 8pt verdana;
+    font-weight: bold;
+}
+
+div.container {
+    display: table-cell;
+}
+
+div.hrow {
+    display: table-row;
+}
+
+div.row {
+    display: table-row;
+}
+
+div.row:hover {
+    background-color: #EEE;
+}
+
+div.timediv {
+    display: table-cell;
+    width: 100px;
+    min-width: 100px;
+    border-left: solid 1px black;
+}
+
+div.leftcontainer {
+    display: table-cell;
+    text-align: right;
+    padding-right: 5px;
+}
+
+div.rowheading {
+    display: table-cell;
+    text-align: right;
+    padding-right: 5px;
+    font: 8pt verdana;
+}
+
+#barwrapper {
+    display: table-cell;
+}
+
+div.bar {
+    background-color: #BBE0F4;
+    border-radius: 5px;
+    position: relative;
+    text-align: left;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font: 8pt verdana;
+    font-weight: normal;
+    color: #333;
+}
+
+div.gridcell {
+    display: table-cell;
+    width: 320px;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+span.gridtitle {
+    font-weight: bold;
+}
+
+div.gridcontent {
+    font-weight: normal;
+    display: table-cell;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+div.gridcontentrow {
+    display: table-row;
+    width: 320px;
+}
+
+div.gridcontentrow:hover {
+    background-color: #EEE;
+    width: 320px;
+}
+
+#dispTooltip {
+    font-weight: normal;
+    position: fixed;
+    background-color: #DDD;
+    font: 8pt verdana;
+    height: 60pt;
+    width: 133pt;
+    border: black solid 1pt;
+    display: none;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    opacity: 0.95;
+}
+
+#tooltip_title {
+    font-weight: bold;
+}
+
+#tooltip_content {
+    font-weight: normal;
+}
