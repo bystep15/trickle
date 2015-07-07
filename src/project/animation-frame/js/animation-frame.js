@@ -1,6 +1,7 @@
-// IE 9+ (bind 方法)
-(function (global, base) {
+define(function (require, exports, module) {
     'use strict';
+
+    var global = window;
 
     function detect(prefix) {
         if (prefix) {
@@ -56,9 +57,8 @@
         };
     }
 
-    base.namespace('util').animationFrame = {
+    module.exports = {
         request: requestAnimationFrame().bind(global),
         cancel: cancelAnimationFrame().bind(global)
     };
-
-}(this, this.base));
+});
