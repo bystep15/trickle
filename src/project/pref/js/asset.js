@@ -69,7 +69,8 @@ define(function (require, exports, module) {
             var performance,
                 entries,
                 sampling,
-                image;
+                image,
+                url;
 
             if (!this.isLucky()) {
                 return;
@@ -85,8 +86,13 @@ define(function (require, exports, module) {
             sampling = this.getSampling(entries);
 
             if (sampling) {
-                image = new Image();
-                image.url = this.param(this.url, this.key, sampling);
+                url = this.param(this.url, this.key, sampling);
+                if (global.navigator.sendBeacon) {
+                    global.navigator.sendBeacon(url);
+                } else {
+                    image = new global.Image();
+                    image.url = url;
+                }
             }
         }
     };
