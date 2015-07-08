@@ -5,6 +5,9 @@
   "keywords": [
     "front-end"
   ],
+  "scripts": {
+      "test": "./node_modules/.bin/karma start config/karma.unit.js"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cmd-transport": "^0.5.1",
