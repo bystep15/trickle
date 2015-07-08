@@ -17,7 +17,7 @@ module.exports = {
     combo: {
         options: {
             port: 3001,
-            base: ['dist'],
+            base: ['src'],
             middleware: function (connect, options, middlewares) {
                 middlewares.unshift(function (req, res, next) {
                     if (!/^\/concat\/?\?\?(.+)$/.test(req.url)) {
@@ -28,7 +28,7 @@ module.exports = {
 
                     files.forEach(function (file) {
                         if (file) {
-                            file = path.join('dist', file);
+                            file = path.join('src', file);
                             res.write(fs.readFileSync(file));
                             res.write('\n');
                         }

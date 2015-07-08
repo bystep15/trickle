@@ -31,8 +31,8 @@ define(function (require, exports, module) {
 
         init: function () {
             var $indicator = $('<style>' +
-                '.strength-indicator { display: block; width: 50px; height: 8px; border-radius: 2px; }' +
-                '.strength-indicator-fill { display: block; width: 0; height: 100%; color: #6ec02a; }' +
+                '.strength-indicator { display: block; width: 50px; height: 8px; border-radius: 2px; background-color: #e1e8ed; }' +
+                '.strength-indicator-fill { display: block; width: 0; height: 100%; background-color: #6ec02a; -webkit-transition: width .5s; -moz-transition: width .5s; -ms-transition: width .5s; transition: width .5s;}' +
             '</style>' +
             '<div class="strength-indicator">' +
                 '<b class="strength-indicator-fill"></b>' +
@@ -99,7 +99,7 @@ define(function (require, exports, module) {
                 // 监控文本
                 // opera绑定input
                 // 其他绑定keyup
-                type = this.$element.oninput === null ? 'input' : 'propertychange';
+                type = this.$element[0].oninput === null ? 'input' : 'propertychange';
 
             this.$element.bind(type, function () {
                 var result = that.check(this.value);

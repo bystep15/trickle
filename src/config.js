@@ -44,7 +44,9 @@
     */
     seajs.config({
         alias: alias,
-        base: 'http://localhost:2999/'
+        base: 'http://localhost:3001/',
+        comboSyntax: ['concat/??', ','],
+        comboBase: seajs.data.base
     });
 
 }(this, this.seajs, this.bui));
