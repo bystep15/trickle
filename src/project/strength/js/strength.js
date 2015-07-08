@@ -21,10 +21,31 @@ define(function (require, exports, module) {
 
         this.$element = $(element);
         this.options = options;
+
+        this.init();
+        this.listen();
     }
 
     Strength.prototype = {
         constructor: Strength,
+
+        init: function () {
+            var $indicator = $('<style>' +
+                '.strength-indicator { display: block; width: 50px; height: 8px; border-radius: 2px; }' +
+                '.strength-indicator-fill { display: block; width: 0; height: 100%; color: #6ec02a; }' +
+            '</style>' +
+            '<div class="strength-indicator">' +
+                '<b class="strength-indicator-fill"></b>' +
+            '</div>');
+         
+            this.$element.parent().append($indicator);
+         
+            this.$indicator = $indicator.find('b');
+        },
+
+        indicate: function (factor) {
+            this.$indicator.width(factor * 33 + '%');
+        },
 
         check: function (text) {
             var ch,
@@ -70,7 +91,7 @@ define(function (require, exports, module) {
             };
         },
 
-        init: function () {
+        listen: function () {
             var that = this,
                 // 更新数字
                 // IE6~8绑定propertychange
@@ -81,7 +102,9 @@ define(function (require, exports, module) {
                 type = this.$element.oninput === null ? 'input' : 'propertychange';
 
             this.$element.bind(type, function () {
-                that.options.callback.call(this, that.check(this.value));
+                var result = that.check(this.value);
+                that.options.callback.call(this, result);
+                that.indicate(result.factor);
             });
         }
     };
