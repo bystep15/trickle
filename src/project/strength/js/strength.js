@@ -55,7 +55,7 @@ define(function (require, exports, module) {
                     } else if (RE_LOWERCASE.test(ch)) {
                         result.lowercase = 1;
                     } else {
-                        result.other = 1;
+                        result.other = 10;
                     }
                 }
 
