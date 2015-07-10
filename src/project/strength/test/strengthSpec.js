@@ -6,9 +6,9 @@ describe('Strength Test Suite', function () {
     function inject(callback) {
         return function (done) {
             seajs.use('/project/strength/js/strength', function (Strength) {
-                
+
                 callback(Strength);
- 
+
                 done();
             });
         };
@@ -25,13 +25,13 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check(''); 
- 
+
+            result = strength.check('');
+
             expect(result).toEqual(jasmine.any(Object));
             expect(result.factor).toEqual(jasmine.any(Number));
             expect(result.message).toEqual(jasmine.any(String));
- 
+
         }));
 
         it('当传入空字符串的时候check方法应该返回factor -1', inject(function (Strength) {
@@ -39,8 +39,8 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check(''); 
+
+            result = strength.check('');
 
             expect(result).toEqual({
                 factor: -1,
@@ -53,15 +53,15 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('1a#F'); 
+
+            result = strength.check('1a#F');
 
             expect(result).toEqual({
                 factor: -1,
                 message: '请输入6-30个字符的密码'
             });
 
-            result = strength.check('abcdefghijklmnopqrstuvwxyz1234567890'); 
+            result = strength.check('abcdefghijklmnopqrstuvwxyz1234567890');
 
             expect(result).toEqual({
                 factor: -1,
@@ -74,8 +74,8 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('testabc'); 
+
+            result = strength.check('testabc');
 
             expect(result).toEqual({
                 factor: 0,
@@ -88,22 +88,22 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('1234567'); 
+
+            result = strength.check('1234567');
 
             expect(result).toEqual({
                 factor: 1,
                 message: '弱：试试字母、数字、符号混搭'
             });
 
-            result = strength.check('abcdefg'); 
+            result = strength.check('abcdefg');
 
             expect(result).toEqual({
                 factor: 1,
                 message: '弱：试试字母、数字、符号混搭'
             });
 
-            result = strength.check('ABCDEFG'); 
+            result = strength.check('ABCDEFG');
 
             expect(result).toEqual({
                 factor: 1,
@@ -116,21 +116,21 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('1234abc'); 
+
+            result = strength.check('1234abc');
 
             expect(result).toEqual({
                 factor: 2,
                 message: '中：试试字母、数字、符号混搭'
             });
 
-            result = strength.check('abcdEFG'); 
+            result = strength.check('abcdEFG');
             expect(result).toEqual({
                 factor: 2,
                 message: '中：试试字母、数字、符号混搭'
             });
 
-            result = strength.check('ABCD123'); 
+            result = strength.check('ABCD123');
 
             expect(result).toEqual({
                 factor: 2,
@@ -143,21 +143,21 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('123abcD'); 
+
+            result = strength.check('123abcD');
 
             expect(result).toEqual({
                 factor: 3,
                 message: '强：请牢记您的密码'
             });
 
-            result = strength.check('abc4EFG'); 
+            result = strength.check('abc4EFG');
             expect(result).toEqual({
                 factor: 3,
                 message: '强：请牢记您的密码'
             });
 
-            result = strength.check('ABCd123'); 
+            result = strength.check('ABCd123');
 
             expect(result).toEqual({
                 factor: 3,
@@ -170,29 +170,29 @@ describe('Strength Test Suite', function () {
                     username: 'testabc'
                 }),
                 result;
- 
-            result = strength.check('!@#$%^'); 
+
+            result = strength.check('!@#$%^');
 
             expect(result).toEqual({
                 factor: 3,
                 message: '强：请牢记您的密码'
             });
 
-            result = strength.check('12345^'); 
+            result = strength.check('12345^');
 
             expect(result).toEqual({
                 factor: 3,
                 message: '强：请牢记您的密码'
             });
 
-            result = strength.check('abcde)'); 
+            result = strength.check('abcde)');
 
             expect(result).toEqual({
                 factor: 3,
                 message: '强：请牢记您的密码'
             });
 
-            result = strength.check('UIPOU('); 
+            result = strength.check('UIPOU(');
 
             expect(result).toEqual({
                 factor: 3,
@@ -207,6 +207,7 @@ describe('Strength Test Suite', function () {
             var strength = new Strength(input, {
                 username: 'testabc'
             });
+
             strength.indicate(0);
             expect(strength.$indicator.width()).toBe(0);
 
@@ -218,6 +219,9 @@ describe('Strength Test Suite', function () {
 
             strength.indicate(3);
             expect(strength.$indicator.width()).toBe(99);
+
+            strength.indicate(-1);
+            expect(strength.$indicator.width()).toBe(0);
         }));
     });
 });

@@ -37,13 +37,14 @@ define(function (require, exports, module) {
             '<div class="strength-indicator">' +
                 '<b class="strength-indicator-fill"></b>' +
             '</div>');
-         
+
             this.$element.parent().append($indicator);
-         
+
             this.$indicator = $indicator.find('b');
         },
 
         indicate: function (factor) {
+            factor = Math.max(factor, 0); // 旧版本的jQuery对待负值，不会处理成0
             this.$indicator.width(factor * 33 + '%');
         },
 
