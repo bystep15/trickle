@@ -2,7 +2,7 @@ define(function (require, exports, module) {
     'use strict';
 
     var MIN_LENGTH = 6,
-        MAX_LENGTH = 30,
+        MAX_LENGTH = 24,
         RE_NUMBER = /^\d$/,
         RE_UPPERCASE = /^[A-Z]$/,
         RE_LOWERCASE = /^[a-z]$/,
@@ -73,7 +73,7 @@ define(function (require, exports, module) {
             if (len < MIN_LENGTH || len > MAX_LENGTH) {
                 return {
                     factor: -1,
-                    message: '请输入6-30个字符的密码'
+                    message: '请输入' + MIN_LENGTH + '-' + MAX_LENGTH + '个字符的密码'
                 };
             }
 
