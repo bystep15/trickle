@@ -1,11 +1,10 @@
 describe('Perf Asset Test Suite', function () {
     'use strict';
 
-    function init(Asset, url, key) {
+    function init(Asset, url) {
         url = url || 'http://log.bystep.com';
-        key = key || 'entry';
-            
-        return new Asset(url, key);
+
+        return new Asset(url);
     }
 
     describe('Constructor Function', function () {
@@ -68,8 +67,8 @@ describe('Perf Asset Test Suite', function () {
             seajs.use('/project/pref/js/asset', function (Asset) {
                 var asset = init(Asset);
 
-                expect(asset.param('http://a.com', 'key', 'value')).toBe('http://a.com?key=value');
-                expect(asset.param('http://a.com/?b=c', 'key', 'value')).toBe('http://a.com/?b=c&key=value');
+                expect(asset.param('http://a.com', 'key', 'value')).toBe('http://a.com?key=%22value%22');
+                expect(asset.param('http://a.com/?b=c', 'key', 'value')).toBe('http://a.com/?b=c&key=%22value%22');
 
                 done();
             });

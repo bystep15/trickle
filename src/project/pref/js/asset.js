@@ -3,12 +3,11 @@ define(function (require, exports, module) {
 
     var global = window;
 
-    function Asset(url, key) {
-        if (!url && !key) {
-            throw new Error('请传入完整的url和key参数');
+    function Asset(url) {
+        if (!url) {
+            throw new Error('请传入完整的url参数');
         }
         this.url = url;
-        this.key = key;
     }
 
     Asset.prototype = {
@@ -22,12 +21,16 @@ define(function (require, exports, module) {
                 return global.performance;
             }
 
+            if (!!global.webkitPerformance) {
+                return global.webkitPerformance;
+            }
+
             if (!!global.msPerformance) {
                 return global.msPerformance;
             }
 
-            if (!!global.webkitPerformance) {
-                return global.webkitPerformance;
+            if (!!global.mozPerformance) {
+                return global.mozPerformance;
             }
 
             return null;
@@ -56,7 +59,7 @@ define(function (require, exports, module) {
                 url += '?';
             }
 
-            url += encodeURIComponent(key) + '=' + encodeURIComponent(value);
+            url += encodeURIComponent(key) + '=' + encodeURIComponent(this.stringify(value));
 
             return url;
         },
@@ -82,17 +85,21 @@ define(function (require, exports, module) {
                 return;
             }
 
+            url = this.url;
+            url = this.param(url, 't', performance.timing);
+
             entries = this.getEntries(performance);
             sampling = this.getSampling(entries);
 
             if (sampling) {
-                url = this.param(this.url, this.key, sampling);
-                if (global.navigator.sendBeacon) {
-                    global.navigator.sendBeacon(url);
-                } else {
-                    image = new global.Image();
-                    image.url = url;
-                }
+                url = this.param(url, 'p', sampling);
+            }
+
+            if (global.navigator.sendBeacon) {
+                global.navigator.sendBeacon(url);
+            } else {
+                image = new global.Image();
+                image.url = url;
             }
         }
     };
