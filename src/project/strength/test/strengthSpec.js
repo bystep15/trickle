@@ -69,6 +69,20 @@ describe('Strength Test Suite', function () {
             });
         }));
 
+        it('当传入的字符串和就密码相同的时候check方法应该返回factor -1', inject(function (Strength) {
+            var strength = new Strength(input, {
+                    oldPassword: 'oldPasswor$'
+                }),
+                result;
+
+            result = strength.check('oldPasswor$');
+
+            expect(result).toEqual({
+                factor: -1,
+                message: '新旧密码不能一致'
+            });
+        }));
+
         it('当传入的字符串和username的时候check方法应该返回factor 0', inject(function (Strength) {
             var strength = new Strength(input, {
                     username: 'testabc'

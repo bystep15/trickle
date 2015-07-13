@@ -14,6 +14,14 @@ define(function (require, exports, module) {
         ],
         $ = require('jquery');
 
+    /**
+     * options: {
+     *     oldPassword: [String],
+     *     $oldPassword: [Element],
+     *     username: [String],
+     *     $username: [Element]
+     * }
+     */
     function Strength(element, options) {
         options = $.extend({
             callback: $.noop
@@ -21,6 +29,8 @@ define(function (require, exports, module) {
 
         this.$element = $(element);
         this.options = options;
+
+        this.value = '';
 
         this.init();
         this.listen();
@@ -67,6 +77,13 @@ define(function (require, exports, module) {
                 };
             }
 
+            if (text === this.options.oldPassword) {
+                return {
+                    factor: -1,
+                    message: '新旧密码不能一致'
+                };
+            }
+
             if (text !== this.options.username) {
                 for (i = 0, len = text.length; i < len; i += 1) {
                     ch = text[i];
@@ -102,11 +119,30 @@ define(function (require, exports, module) {
                 // 其他绑定keyup
                 type = this.$element[0].oninput === null ? 'input' : 'propertychange';
 
-            this.$element.bind(type, function () {
-                var result = that.check(this.value);
-                that.options.callback.call(this, result);
+            function listener(context) {
+                var result = that.check(that.value);
+                that.options.callback.call(context, result);
                 that.indicate(result.factor);
+            }
+
+            this.$element.bind(type, function () {
+                that.value = this.value;
+                listener(this);
             });
+
+            if (this.options.$username) {
+                $(this.options.$username).bind(type, function () {
+                    that.options.username = this.value;
+                    listener(this);
+                });
+            }
+
+            if (this.options.$oldPassword) {
+                $(this.options.$oldPassword).bind(type, function () {
+                    that.options.oldPassword = this.value;
+                    listener(this);
+                });
+            }
         }
     };
 
