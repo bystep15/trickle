@@ -1,7 +1,8 @@
+/*
+ * 静态资源性能统计
+ */
 define(function (require, exports, module) {
     'use strict';
-
-    var global = window;
 
     function Asset(url) {
         if (!url) {
@@ -44,8 +45,43 @@ define(function (require, exports, module) {
             return entries.sort(this.compare)[0];
         },
 
-        stringify: function (sampling) {
-            return JSON.stringify(sampling);
+        keys: function (value) {
+            var ks = [];
+
+            while (value !== Object.prototype) {
+                ks = ks.concat(Object.keys(value));
+                value = Object.getPrototypeOf(value);
+            }
+
+            return ks;
+        },
+
+        purify: function (value) {
+            var keys = this.keys(value),
+                start = value.domainLookupStart,
+                obj = {};
+
+            keys.forEach(function (key) {
+                var v = value[key];
+
+                if (typeof v === 'number') {
+                    if (v >= start) {
+                        v = v - start;
+                    }
+                    v = Math.ceil(v);
+                }
+
+                obj[key] = v;
+            });
+
+            return obj;
+        },
+
+        stringify: function (value) {
+            if (value && typeof value === 'object') {
+                value = this.purify(value);
+            }
+            return JSON.stringify(value);
         },
 
         compare: function (entry1, entry2) {
