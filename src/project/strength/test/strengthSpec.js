@@ -44,11 +44,11 @@ describe('Strength Test Suite', function () {
 
             expect(result).toEqual({
                 factor: -1,
-                message: '请输入6-30个字符的密码'
+                message: '请输入6-24个字符的密码'
             });
         }));
 
-        it('当传入的字符串长度小于6或大约30的时候check方法应该返回factor -1', inject(function (Strength) {
+        it('当传入的字符串长度小于6或大约24的时候check方法应该返回factor -1', inject(function (Strength) {
             var strength = new Strength(input, {
                     username: 'testabc'
                 }),
@@ -58,14 +58,14 @@ describe('Strength Test Suite', function () {
 
             expect(result).toEqual({
                 factor: -1,
-                message: '请输入6-30个字符的密码'
+                message: '请输入6-24个字符的密码'
             });
 
             result = strength.check('abcdefghijklmnopqrstuvwxyz1234567890');
 
             expect(result).toEqual({
                 factor: -1,
-                message: '请输入6-30个字符的密码'
+                message: '请输入6-24个字符的密码'
             });
         }));
 
