@@ -143,6 +143,11 @@ define(function (require, exports, module) {
                     listener(this);
                 });
             }
+        },
+
+        trigger: function () {
+            var type = this.$element[0].oninput === null ? 'input' : 'propertychange';
+            this.$element.trigger(type);
         }
     };
 
