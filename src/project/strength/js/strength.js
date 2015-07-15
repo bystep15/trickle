@@ -86,7 +86,7 @@ define(function (require, exports, module) {
 
             if (text !== this.options.username) {
                 for (i = 0, len = text.length; i < len; i += 1) {
-                    ch = text[i];
+                    ch = text.charAt(i);
                     if (RE_NUMBER.test(ch)) {
                         result.number = 1;
                     } else if (RE_UPPERCASE.test(ch)) {
