@@ -9,16 +9,21 @@ Tags: FE
 5. 对待不固定尺寸的图片用背景图的形式替代img标签，以避免CSS width、height等属性设置对占位空间的影响(CSS中img标签的`height: auto`按图片实际宽高比计算，跟设置的width和height属性无关)。
 
 ##关键代码
+第一种情况，img显示的最终尺寸与width和height属性所标记的尺寸不一致。
 ``` html
-<div role="img"></div>
+<div role="img" data-original="真实图片地址"></div>
 ```
 ``` css
 display: inline-block;
 width: 图片真实尺寸 ;
 max-width: 100%;
 padding: 图片高宽比 0 0 0;
-background: url(图片地址) no-repeat center center;
+background: url(占位图片地址) no-repeat center center;
 background-size: cover;
+```
+第二种情况，img显示的尺寸是固定的，比如已经通过CSS样式确定
+``` html
+<img src="" data-original="真实图片地址" />
 ```
 
 ##备注
