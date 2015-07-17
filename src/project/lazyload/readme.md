@@ -11,7 +11,7 @@ Tags: FE
 ##关键代码
 第一种情况，img显示的最终尺寸与width和height属性所标记的尺寸不一致。
 ``` html
-<div role="img" data-original="真实图片地址"></div>
+<div role="img" data-lazyload-original="真实图片地址" data-lazyload-state="interactive|loading|complete"></div>
 ```
 ``` css
 display: inline-block;
@@ -23,7 +23,7 @@ background-size: cover;
 ```
 第二种情况，img显示的尺寸是固定的，比如已经通过CSS样式确定
 ``` html
-<img src="" data-original="真实图片地址" />
+<img src="" data-lazyload-original="真实图片地址" data-lazyload-state="interactive|loading|complete" />
 ```
 
 ##备注
