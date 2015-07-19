@@ -6,42 +6,34 @@ define(function (require, exports, module) {
         global = window,
         instance;
 
-    $.fn.lazyload.defaults = {
-        threshold: 0,
-        loadallAfterOnload: false
-    };
-
     function Lazyload() {
-        this.stack = new Stack();
-        this.hashmap = new HashMap();
-        this.loader = new Loader();
+        var load = $.proxy(this.load, this);
+
         this.$global = $(window);
-        this.$images = $();
-        this.images = [];
+
+        this.hashmap = new HashMap();
+        this.stack = new Stack();
+        this.loader = new Loader({
+            success: load,
+            fail: load
+        });
+
         this.listen();
     }
 
     Lazyload.prototype = {
         constructor: Lazyload,
 
-        init: function () {
-        },
-
-        load: function () {
-        },
-
         listen: function () {
-            this.$global.bind('resize', update);
-            this.$global.bind('scroll', update);
+            this.$global.bind('resize', $.proxy(this.update, this));
+            this.$global.bind('scroll', $.proxy(this.update, this));
         },
 
         load: function () {
-        },
-
-        next: function () {
-        },
-
-        add: function () {
+            if (this.loader.isLoading || this.stack.isEmpty()) {
+                return;
+            }
+            this.loader.load(this.stack.pop());
         },
 
         init: function (element) {
@@ -49,27 +41,29 @@ define(function (require, exports, module) {
                 $images = $(element).find('[data-lazyload-original]');
 
             $images.each(function () {
-                if (that.hashmap.containsKey(this) {
+                if (that.hashmap.containsKey(this)) {
                     return;
                 }
-                if (!this.getAttribute('data-lazyload-state')) {
+                if (this.getAttribute('data-lazyload-state')) {
                     return;
                 }
 
                 var $this = $(this);
                 if (that.isVisible($this)) {
+                    that.interact(this);
                     that.hashmap.put(this, {
                         element: this,
                         top: $this.offset().top,
-                        height: $this.height()
+                        height: $this.innerHeight()
                     });
                 }
             });
+
+            this.$global.trigger('scroll');
         },
 
         interact: function (element) {
             element.setAttribute('data-lazyload-state', 'interactive');
-            that.stack.push(this.getAttribute('data-lazyload-original'));
         },
 
         update: function () {
@@ -78,8 +72,9 @@ define(function (require, exports, module) {
 
             $.each(images, function () {
                 if (that.inViewport(this.top, this.height)) {
-                    that.interact(this.element);
                     that.hashmap.remove(this.element);
+                    that.stack.push(this.element);
+                    that.load();
                 }
             });
         },
@@ -99,17 +94,16 @@ define(function (require, exports, module) {
         },
 
         belowTheFold: function (top, height) {
-            var $global = $(global),
-                fold;
+            var fold;
 
-            fold = $global.height() + global.scrollY;
+            fold = this.$global.height() + global.scrollY;
 
             return fold <= top;
         },
 
         inViewport: function (top, height) {
-            return this.belowTheFold(top, height) ||
-                this.aboveTheFold(top, height);
+            return !this.belowTheFold(top, height) &&
+                !this.aboveTheFold(top, height);
         }
     };
 

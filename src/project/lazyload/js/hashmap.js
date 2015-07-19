@@ -3,7 +3,7 @@ define(function (require, exports, module) {
 
     function HashMap() {
         this.index = 0;
-        this.values = [];
+        this.container = [];
         this.map = {};
     }
 
@@ -13,21 +13,30 @@ define(function (require, exports, module) {
         hashCode: function (key) {
             var type = typeof key;
 
-            this.index += 1;
+            if (type === 'object' && key.getAttribute) {
+                if (key.getAttribute('data-lazyload-hashcode')) {
+                    return key.getAttribute('data-lazyload-hashcode');
+                }
 
+                this.index += 1;
+                key.setAttribute('data-lazyload-hashcode', type + this.index);
+                return type + this.index;
+            }
+
+            this.index += 1;
             return type + this.index;
         },
 
         size: function () {
-            return this.values.length;
+            return this.container.length;
         },
 
         values: function () {
             var values = [],
                 i;
 
-            for (i = this.values.length - 1; i >= 0; i -= 1) {
-                values[i] = this.values[i];
+            for (i = this.container.length - 1; i >= 0; i -= 1) {
+                values[i] = this.container[i];
             }
 
             return values;
@@ -47,14 +56,14 @@ define(function (require, exports, module) {
             var hashCode = this.hashCode(key);
 
             this.map[hashCode] = value;
-            this.values.push(values);
+            this.container.push(value);
         },
 
         remove: function (key) {
             var hashCode = this.hashCode(key),
-                index = this.values.indexOf(this.map[hashCode]);
+                index = this.container.indexOf(this.map[hashCode]);
 
-            this.values.splite(index, 1);
+            this.container.splice(index, 1);
 
             delete this.map[hashCode];
         }

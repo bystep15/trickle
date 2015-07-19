@@ -3,13 +3,14 @@ define(function (require, exports, module) {
 
     function Loader(options) {
         this.options = options;
+        this.isLoading = false;
     }
 
     Loader.prototype = {
         constructor: Loader,
 
         div: function (element, src) {
-            element.style.backgroundImage = 'url(' + src + ')';
+            element.style.backgroundImage = 'url("' + src + '")';
         },
 
         img: function (element, src) {
@@ -26,14 +27,17 @@ define(function (require, exports, module) {
             }
         },
 
-        load: function (element, src) {
+        load: function (element) {
             var that = this,
-                state = element.getAttribute('data-lazyload-state');
+                state = element.getAttribute('data-lazyload-state'),
+                src = element.getAttribute('data-lazyload-original'),
                 image;
 
             if (state !== 'interactive') {
                 return;
             }
+
+            this.isLoading = true;
 
             element.setAttribute('data-lazyload-state', 'loading');
 
@@ -42,11 +46,13 @@ define(function (require, exports, module) {
             image.onload = function () {
                 // 渲染图片
                 that.render(element, src);
+                that.isLoading = false;
                 that.options.success && that.options.success(element, src);
             };
 
             image.onerror = image.onabort = function () {
                 // pop图片，不再加载
+                that.isLoading = false;
                 that.options.fail && that.options.fail(element, src);
             };
 
