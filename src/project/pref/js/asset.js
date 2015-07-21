@@ -15,7 +15,7 @@ define(function (require, exports, module) {
         constructor: Asset,
 
         // 采样比例
-        ratio: 10,
+        ratio: 50,
 
         getPerformance: function () {
             if (!!global.performance) {
@@ -58,8 +58,13 @@ define(function (require, exports, module) {
 
         purify: function (value) {
             var keys = this.keys(value),
-                start = value.domainLookupStart,
+                start = 0,
                 obj = {};
+
+            // 1436544000000 = Date.parse('Sat Jul 11 2015 00:00:00 GMT+0800 (CST)')
+            if (value.fetchStart > 1436544000000) {
+                start = value.fetchStart;
+            }
 
             keys.forEach(function (key) {
                 var v = value[key];
