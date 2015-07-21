@@ -84,26 +84,27 @@ define(function (require, exports, module) {
                 $elem.css('display') !== 'none';
         },
 
-        aboveTheFold: function (top, height) {
-            var bottom = top + height,
+        belowTheFold: function (top, height) {
+            var bottom = top + height + 200,
                 fold;
 
             fold = global.scrollY;
 
-            return fold >= bottom;
+            return fold <= bottom;
         },
 
-        belowTheFold: function (top, height) {
+        aboveTheFold: function (top, height) {
             var fold;
 
+            top -= 200;
             fold = this.$global.height() + global.scrollY;
 
-            return fold <= top;
+            return fold >= top;
         },
 
         inViewport: function (top, height) {
-            return !this.belowTheFold(top, height) &&
-                !this.aboveTheFold(top, height);
+            return this.belowTheFold(top, height) &&
+                this.aboveTheFold(top, height);
         }
     };
 

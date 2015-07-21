@@ -1,6 +1,8 @@
 define(function (require, exports, module) {
     'use strict';
 
+    var $ = require('jquery');
+
     function Loader(options) {
         this.options = options;
         this.isLoading = false;
@@ -10,6 +12,7 @@ define(function (require, exports, module) {
         constructor: Loader,
 
         div: function (element, src) {
+            //$(element).css('opacity', 0.5).animate({opacity: 1}, 400);
             element.style.backgroundImage = 'url("' + src + '")';
         },
 

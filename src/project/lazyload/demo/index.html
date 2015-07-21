@@ -77,7 +77,7 @@
     <meta name="format-detection" content="telephone=no, address=no, email=no"/>
 
     <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari）-->
-    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL"/>
+    <!-- <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL"/> -->
 
     <!-- 百度禁止转码 -->
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
@@ -122,7 +122,7 @@
             '<div data-lazyload-original="' + image.src +
             '" style="display: block;' +
             'width: 100%; padding: ' + image.height / image.width * 100 + '% 0 0 0;' +
-            'background: red no-repeat center center;' +
+            'background: #999 no-repeat center center;' +
             'background-size: cover;"></div>' +
             '</div>';
         return html;
@@ -131,7 +131,7 @@
 <style>
     body {
         margin: 0;
-        background-color: #666;
+        background-color: #ccc;
     }
 
     .container-div,
@@ -162,7 +162,7 @@
         height: 100%;
         border: none;
         background: url(./images/placeholder.png) no-repeat center center;
-        background-size: 126px 149px;
+        background-size: 63px 75px;
     }
 
     @media (max-width: 720px) {
