@@ -50,7 +50,9 @@ define(function (require, exports, module) {
                 // 渲染图片
                 that.render(element, src);
                 that.isLoading = false;
-                that.options.success && that.options.success(element, src);
+                setTimeout(function () {
+                    that.options.success && that.options.success(element, src);
+                }, 0);
             };
 
             image.onerror = image.onabort = function () {
