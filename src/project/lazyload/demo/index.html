@@ -89,49 +89,7 @@
     -->
 </head>
 <body>
-<script>
-    var images = [
-        {src: './images/(1).jpg', width: 1920, height: 1200},
-        {src: './images/(2).jpg', width: 1920, height: 1200},
-        {src: './images/(3).jpg', width: 1920, height: 1200},
-        {src: './images/(4).jpg', width: 1920, height: 1200},
-        {src: './images/(5).jpg', width: 2048, height: 1361},
-        {src: './images/(6).jpg', width: 1920, height: 1200},
-        {src: './images/(7).jpg', width: 1920, height: 1200},
-        {src: './images/(8).jpg', width: 1920, height: 1200},
-        {src: './images/(9).jpg', width: 1920, height: 1200},
-        {src: './images/(10).jpg', width: 1680, height: 1050},
-        {src: './images/(11).jpg', width: 1280, height: 800},
-        {src: './images/(12).jpg', width: 1920, height: 1200},
-        {src: './images/(13).jpg', width: 1920, height: 1080},
-        {src: './images/(14).jpg', width: 1280, height: 800},
-        {src: './images/(15).jpg', width: 1680, height: 1050},
-        {src: './images/(16).jpg', width: 1280, height: 800},
-        {src: './images/(17).jpg', width: 1280, height: 800},
-        {src: './images/(18).jpg', width: 1680, height: 1050},
-        {src: './images/(19).jpg', width: 1280, height: 800},
-        {src: './images/(20).jpg', width: 1280, height: 800},
-        {src: './images/(21).jpg', width: 1280, height: 800},
-        {src: './images/(22).jpg', width: 1280, height: 800},
-        {src: './images/(23).jpg', width: 1680, height: 1050},
-        {src: './images/(24).jpg', width: 1680, height: 1050},
-        {src: './images/(25).jpg', width: 1280, height: 800}
-    ];
-    function templateDiv(image) {
-        html = '<div role="img" style="display: inline-block; width: ' + image.width + 'px; max-width: 100%;">' +
-            '<div data-lazyload-original="' + image.src +
-            '" style="display: block;' +
-            'width: 100%; padding: ' + image.height / image.width * 100 + '% 0 0 0;' +
-            'background: #999 no-repeat center center;' +
-            'background-size: cover;"></div>' +
-            '</div>';
-        return html;
-    }
-</script>
 <style>
-    *:not(html) {
-        -webkit-transform: translate3d(0, 0, 0);
-    }
     body {
         margin: 0;
         background-color: #ccc;
@@ -175,7 +133,73 @@
             width: auto;
         }
     }
+
+    .lazyload-img {
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    .lazyload-img > div {
+        position: relative;
+        display: block;
+        width: 100%;
+        background: #999 no-repeat center center;
+        background-size: cover;
+    }
+
+    .lazyload-img > div > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url(./images/placeholder.png) no-repeat center center;
+        background-size: 63px 75px;
+        /*
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        */
+    }
 </style>
+<script>
+    var images = [
+        {src: './images/(1).jpg', width: 1920, height: 1200},
+        {src: './images/(2).jpg', width: 1920, height: 1200},
+        {src: './images/(3).jpg', width: 1920, height: 1200},
+        {src: './images/(4).jpg', width: 1920, height: 1200},
+        {src: './images/(5).jpg', width: 2048, height: 1361},
+        {src: './images/(6).jpg', width: 1920, height: 1200},
+        {src: './images/(7).jpg', width: 1920, height: 1200},
+        {src: './images/(8).jpg', width: 1920, height: 1200},
+        {src: './images/(9).jpg', width: 1920, height: 1200},
+        {src: './images/(10).jpg', width: 1680, height: 1050},
+        {src: './images/(11).jpg', width: 1280, height: 800},
+        {src: './images/(12).jpg', width: 1920, height: 1200},
+        {src: './images/(13).jpg', width: 1920, height: 1080},
+        {src: './images/(14).jpg', width: 1280, height: 800},
+        {src: './images/(15).jpg', width: 1680, height: 1050},
+        {src: './images/(16).jpg', width: 1280, height: 800},
+        {src: './images/(17).jpg', width: 1280, height: 800},
+        {src: './images/(18).jpg', width: 1680, height: 1050},
+        {src: './images/(19).jpg', width: 1280, height: 800},
+        {src: './images/(20).jpg', width: 1280, height: 800},
+        {src: './images/(21).jpg', width: 1280, height: 800},
+        {src: './images/(22).jpg', width: 1280, height: 800},
+        {src: './images/(23).jpg', width: 1680, height: 1050},
+        {src: './images/(24).jpg', width: 1680, height: 1050},
+        {src: './images/(25).jpg', width: 1280, height: 800}
+    ];
+    function templateDiv(image) {
+        html = '<div role="img" class="lazyload-img" style="width: ' + image.width + 'px;">' +
+            '<div style="padding: ' + image.height / image.width * 100 + '% 0 0 0;' + '">' +
+            '<img data-lazyload-original="' + image.src + '" />' +
+            '</div>' +
+            '</div>';
+        return html;
+    }
+</script>
 <div class="container-div">
     <script>
         var i,

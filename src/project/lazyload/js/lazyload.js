@@ -38,7 +38,7 @@ define(function (require, exports, module) {
 
         init: function (element) {
             var that = this,
-                $images = $(element).find('[data-lazyload-original]');
+                $images = $(element).find('img[data-lazyload-original]');
 
             $images.each(function () {
                 if (that.hashmap.containsKey(this)) {
@@ -69,6 +69,10 @@ define(function (require, exports, module) {
         update: function () {
             var that = this,
                 images = this.hashmap.values();
+
+            if (images.length === 0) {
+                return;
+            }
 
             $.each(images, function () {
                 if (that.inViewport(this.top, this.height)) {
