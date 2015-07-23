@@ -11,9 +11,19 @@ define(function (require, exports, module) {
     Loader.prototype = {
         constructor: Loader,
 
-        render: function (element, src) {
+        success: function (element) {
+            var that = this;
             element.setAttribute('data-lazyload-state', 'complete');
-            element.src = src;
+            that.isLoading = false;
+            that.options.success && that.options.success(element);
+        },
+
+        fail: function (element) {
+            var that = this;
+            // pop图片，不再加载
+            that.isLoading = false;
+            element.setAttribute('data-lazyload-state', 'error');
+            that.options.fail && that.options.fail(element);
         },
 
         load: function (element) {
@@ -29,22 +39,8 @@ define(function (require, exports, module) {
 
             element.setAttribute('data-lazyload-state', 'loading');
 
-            element.onload = function () {
-                // 渲染图片
-                that.render(element, src);
-                that.isLoading = false;
-                setTimeout(function () {
-                    that.options.success && that.options.success(element, src);
-                }, 0);
-                element.onerror = element.onabort = element.onload = undefined;
-            };
-
-            element.onerror = element.onabort = function () {
-                // pop图片，不再加载
-                that.isLoading = false;
-                that.options.fail && that.options.fail(element, src);
-                element.onerror = element.onabort = element.onload = undefined;
-            };
+            $(element).one('load', $.proxy(this.success, this, element)).
+                one('error abort', $.proxy(this.fail, this, element));
 
             element.src = src;
         }

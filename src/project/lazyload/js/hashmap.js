@@ -61,7 +61,15 @@ define(function (require, exports, module) {
 
         remove: function (key) {
             var hashCode = this.hashCode(key),
-                index = this.container.indexOf(this.map[hashCode]);
+                index,
+                len;
+
+            // index = this.container.indexOf(this.map[hashCode]);
+            for (index = 0, len = this.container.length; index < len; index += 1) {
+                if (this.map[hashCode] === this.container[index]) {
+                    break;
+                }
+            }
 
             this.container.splice(index, 1);
 

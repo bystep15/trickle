@@ -25,8 +25,9 @@ define(function (require, exports, module) {
         constructor: Lazyload,
 
         listen: function () {
-            this.$global.bind('resize', $.proxy(this.update, this));
-            this.$global.bind('scroll', $.proxy(this.update, this));
+            var update = $.proxy(this.update, this);
+            this.$global.on('resize', update);
+            this.$global.on('scroll', update);
         },
 
         load: function () {
@@ -59,7 +60,7 @@ define(function (require, exports, module) {
                 }
             });
 
-            this.$global.trigger('scroll');
+            this.update();
         },
 
         interact: function (element) {
@@ -90,18 +91,20 @@ define(function (require, exports, module) {
 
         belowTheFold: function (top, height) {
             var bottom = top + height + 200,
+                scrollY = global.scrollY || global.pageYOffset || global.document.documentElement.scrollTop,
                 fold;
 
-            fold = global.scrollY;
+            fold = scrollY;
 
             return fold <= bottom;
         },
 
         aboveTheFold: function (top, height) {
-            var fold;
+            var fold,
+                scrollY = global.scrollY || global.pageYOffset || global.document.documentElement.scrollTop;
 
             top -= 200;
-            fold = this.$global.height() + global.scrollY;
+            fold = this.$global.height() + scrollY;
 
             return fold >= top;
         },
