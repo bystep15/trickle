@@ -124,6 +124,7 @@
         border: none;
         background: url(./images/placeholder.png) no-repeat center center;
         background-size: 63px 75px;
+        will-change: transform;
     }
 
     @media (max-width: 720px) {
@@ -155,6 +156,7 @@
         height: 100%;
         background: url(./images/placeholder.png) no-repeat center center;
         background-size: 63px 75px;
+        will-change: transform;
         /*
         -webkit-transform: translate3d(0, 0, 0);
         -moz-transform: translate3d(0, 0, 0);
@@ -165,31 +167,31 @@
 </style>
 <script>
     var images = [
-        {src: './images/(1).jpg', width: 1920, height: 1200},
-        {src: './images/(2).jpg', width: 1920, height: 1200},
-        {src: './images/(3).jpg', width: 1920, height: 1200},
-        {src: './images/(4).jpg', width: 1920, height: 1200},
-        {src: './images/(5).jpg', width: 2048, height: 1361},
-        {src: './images/(6).jpg', width: 1920, height: 1200},
-        {src: './images/(7).jpg', width: 1920, height: 1200},
-        {src: './images/(8).jpg', width: 1920, height: 1200},
-        {src: './images/(9).jpg', width: 1920, height: 1200},
-        {src: './images/(10).jpg', width: 1680, height: 1050},
-        {src: './images/(11).jpg', width: 1280, height: 800},
-        {src: './images/(12).jpg', width: 1920, height: 1200},
-        {src: './images/(13).jpg', width: 1920, height: 1080},
-        {src: './images/(14).jpg', width: 1280, height: 800},
-        {src: './images/(15).jpg', width: 1680, height: 1050},
-        {src: './images/(16).jpg', width: 1280, height: 800},
-        {src: './images/(17).jpg', width: 1280, height: 800},
-        {src: './images/(18).jpg', width: 1680, height: 1050},
-        {src: './images/(19).jpg', width: 1280, height: 800},
-        {src: './images/(20).jpg', width: 1280, height: 800},
-        {src: './images/(21).jpg', width: 1280, height: 800},
-        {src: './images/(22).jpg', width: 1280, height: 800},
-        {src: './images/(23).jpg', width: 1680, height: 1050},
-        {src: './images/(24).jpg', width: 1680, height: 1050},
-        {src: './images/(25).jpg', width: 1280, height: 800}
+        {src: './images/large/(1).jpg', width: 1920, height: 1200},
+        {src: './images/large/(2).jpg', width: 1920, height: 1200},
+        {src: './images/large/(3).jpg', width: 1920, height: 1200},
+        {src: './images/large/(4).jpg', width: 1920, height: 1200},
+        {src: './images/large/(5).jpg', width: 2048, height: 1361},
+        {src: './images/large/(6).jpg', width: 1920, height: 1200},
+        {src: './images/large/(7).jpg', width: 1920, height: 1200},
+        {src: './images/large/(8).jpg', width: 1920, height: 1200},
+        {src: './images/large/(9).jpg', width: 1920, height: 1200},
+        {src: './images/large/(10).jpg', width: 1680, height: 1050},
+        {src: './images/large/(11).jpg', width: 1280, height: 800},
+        {src: './images/large/(12).jpg', width: 1920, height: 1200},
+        {src: './images/large/(13).jpg', width: 1920, height: 1080},
+        {src: './images/large/(14).jpg', width: 1280, height: 800},
+        {src: './images/large/(15).jpg', width: 1680, height: 1050},
+        {src: './images/large/(16).jpg', width: 1280, height: 800},
+        {src: './images/large/(17).jpg', width: 1280, height: 800},
+        {src: './images/large/(18).jpg', width: 1680, height: 1050},
+        {src: './images/large/(19).jpg', width: 1280, height: 800},
+        {src: './images/large/(20).jpg', width: 1280, height: 800},
+        {src: './images/large/(21).jpg', width: 1280, height: 800},
+        {src: './images/large/(22).jpg', width: 1280, height: 800},
+        {src: './images/large/(23).jpg', width: 1680, height: 1050},
+        {src: './images/large/(24).jpg', width: 1680, height: 1050},
+        {src: './images/large/(25).jpg', width: 1280, height: 800}
     ];
     function templateDiv(image) {
         html = '<div role="img" class="lazyload-img" style="width: ' + image.width + 'px;">' +
@@ -215,7 +217,7 @@
     <script>
         for (i = 16; i < 26; i += 1) {
             document.write('<div class="img-wrap">');
-            document.write('<img data-lazyload-original="./images/(' + i + ').jpg" />');
+            document.write('<img data-lazyload-original="./images/large/(' + i + ').jpg" />');
             document.write('</div>');
         }
     </script>
