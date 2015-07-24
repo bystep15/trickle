@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie6" lang="zh-cn"><![endif]-->
+<!--[if IE 7]><html class="ie7" lang="zh-cn"><![endif]-->
+<!--[if IE 8]><html class="ie8" lang="zh-cn"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="zh-cn"><!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>EXIF Demo</title>
+    <style>
+        body {
+            width: 900px;
+            margin: 0 auto;
+        }
+
+        #divDrop {
+            margin: 10px 0 0;
+            padding: 9px;
+            border: dotted 1px;
+            min-height: 200px;
+        }
+
+        #ulFileList {
+            margin: 0;
+            padding: 0;
+        }
+        #ulFileList li {
+            display: inline-block;
+            width: 200px;
+            padding: 10px;
+        }
+        #ulFileList li img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="divDrop">
+        <ul id="ulFileList">
+        </ul>
+    </div>
+    <form action="" method="post">
+        <input type="file" multiple="multiple" />
+    </form>
+    <script src="../js/exif.js"></script>
+    <script>
+    (function (global, $, document) {
+        var container = document.getElementById('divDrop'),
+            fileList = document.getElementById('ulFileList');
+
+        container.addEventListener('dragenter', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        container.addEventListener('dragover', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        container.addEventListener('drop', function (e) {
+            var files = e.dataTransfer.files,
+                //file = files[0].slice(0, Math.pow(2, 16)),
+                //file = files[0],
+                time = Date.now();
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            function load(file) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var li = document.createElement('li'),
+                        img = document.createElement('img'),
+                        span = document.createElement('span'),
+                        blob,
+                        url;
+
+                    try {
+                        blob = getThumbnail(reader.result);
+                    } catch(ex) {
+                        return;
+                    }
+                    url = global.URL.createObjectURL(blob);
+             
+                    img.src = url;
+                    global.URL.revokeObjectURL(url);
+             
+                    li.appendChild(img);
+                    li.appendChild(span);
+                    fileList.appendChild(li);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
+            for(i = 0, len = files.length; i < len; i += 1) {
+                load(files[i].slice(0, Math.pow(2, 16)));
+            }
+        });
+    }(this, this.jQuery, this.document));
+    </script>
+</body>
+</html>

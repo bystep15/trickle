@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie6" lang="zh-cn"><![endif]-->
+<!--[if IE 7]><html class="ie7" lang="zh-cn"><![endif]-->
+<!--[if IE 8]><html class="ie8" lang="zh-cn"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="zh-cn"><!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>Upload Demo</title>
+    <style>
+        body {
+            width: 900px;
+            margin: 0 auto;
+        }
+
+        #divDrop {
+            margin: 10px 0 0;
+            padding: 9px;
+            border: dotted 1px;
+            min-height: 200px;
+        }
+
+        #ulFileList {
+            margin: 0;
+            padding: 0;
+        }
+        #ulFileList li {
+            display: inline-block;
+            width: 200px;
+            padding: 10px;
+        }
+        #ulFileList li img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="divDrop">
+        <ul id="ulFileList">
+        </ul>
+    </div>
+    <form action="" method="post">
+        <input type="file" multiple="multiple" />
+    </form>
+    <script>
+    (function (global, $, document) {
+        var container = document.getElementById('divDrop'),
+            fileList = document.getElementById('ulFileList');
+
+        container.addEventListener('dragenter', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        container.addEventListener('dragover', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        container.addEventListener('drop', function (e) {
+            var files = e.dataTransfer.files,
+                i = 0,
+                len = files.length;
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            function load() {
+                var file = files[i++],
+                    li = document.createElement('li'),
+                    img = document.createElement('img'),
+                    span = document.createElement('span'),
+                    reader = new FileReader(),
+                    time = Date.now();
+
+                reader.onload = (function (img, reader) {
+                    return function () {
+                        img.src = reader.result;
+                        span.innerHTML = file.name + '(' + (file.size >>> 10) + 'KB)(' + (Date.now() - time) + 'ms)';
+                        if (i < len ) {
+                            setTimeout(load, 0);
+                        }
+                    };
+                }(img, reader));
+
+                reader.readAsDataURL(file);
+                //reader.readAsText(file);
+                //reader.readAsDataURL(file);
+                //reader.readAsBinaryString(file);
+
+                li.appendChild(img);
+                li.appendChild(span);
+
+                fileList.appendChild(li);
+            }
+
+            load();
+
+            function load2(i) {
+                var file = files[i],
+                    li = document.createElement('li'),
+                    img = document.createElement('img'),
+                    span = document.createElement('span'),
+                    url = global.URL.createObjectURL(file);
+
+                img.src = url;
+                span.innerHTML = file.name + '(' + (file.size >>> 10) + 'KB)';
+
+                global.URL.revokeObjectURL(url);
+
+                li.appendChild(img);
+                li.appendChild(span);
+                fileList.appendChild(li);
+            }
+
+            /*
+            for (; i < len; i += 1) {
+                //load2(i);
+            }
+            */
+        });
+    }(this, this.jQuery, this.document));
+    </script>
+</body>
+</html>
