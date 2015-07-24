@@ -65,7 +65,7 @@ body {
     left: 0;
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     will-change: transform;
     /*
     -webkit-transform: translate3d(0, 0, 0);
@@ -73,4 +73,8 @@ body {
     -ms-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
     */
+}
+
+.ie7 .lazyload-img > div > img {
+    height: auto;
 }
