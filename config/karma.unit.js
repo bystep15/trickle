@@ -17,7 +17,6 @@ module.exports = function (config) {
             'lib/seajs-text/1.1.1/seajs-text.js',
             'config.js',
             '**/js/*.js',
-            'vendor/jquery/1.11.2/jquery.js',
             '**/test/*Spec.js'
         ],
 
