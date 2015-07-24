@@ -1,4 +1,4 @@
-describe('Lazyload HashMap Suite', function () {
+describe('Lazyload Test Suite', function () {
     describe('Stack Test Suite', function () {
         'use strict';
  
