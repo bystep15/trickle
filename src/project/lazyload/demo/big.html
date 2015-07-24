@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="zh-cmn-Hans" class="ie6"><![endif]-->
+<!--[if IE 7]>
+<html lang="zh-cmn-Hans" class="ie7"><![endif]-->
+<!--[if IE 8]>
+<html lang="zh-cmn-Hans" class="ie8"><![endif]-->
+<!--[if (gte IE 9)]><!-->
+<html lang="zh-cmn-Hans"><!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+
+    <title>Lazyload</title>
+
+    <!-- 优先使用 IE 最新版本和 Chrome -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <!-- 360 使用Google Chrome Frame -->
+    <meta name="renderer" content="webkit"/>
+
+    <!-- 添加 favicon icon -->
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+
+    <!-- http://bystep.duapp.com/drip/css/yarn.html#/1/1 -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"/>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <link rel="icon" sizes="192x192" href="img/chrome-touch-icon-192x192.png"/>
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="img/ms-touch-icon-144x144-precomposed.png"/>
+    <meta name="msapplication-TileColor" content="#3372DF"/>
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no"/>
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <!-- 是否启用 WebApp 全屏模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- 设置状态栏的背景颜色，只有在 `"apple-mobile-web-app-capable" content="yes"` 时生效 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="标题"/>
+
+    <!-- rel 参数： apple-touch-icon 图片自动处理成圆角和高光等效果。 apple-touch-icon-precomposed 禁止系统自动添加效果，直接显示设计原图。-->
+    <!-- iPhone 和 iTouch，默认 57x57 像素，必须有 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/icon-57.png"/>
+    <!-- Retina iPhone 和 Retina iTouch -->
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icon-114.png"/>
+    <!-- iPad -->
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icon-72.png"/>
+    <!-- Retina iPad -->
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/icon-144.png"/>
+    <!-- iPhone 6 -->
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/icon-144.png"/>
+    <!-- iPhone 6 plus -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icon-144.png"/>
+
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true"/>
+
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait"/>
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes"/>
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application"/>
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait"/>
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true"/>
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app"/>
+
+    <!-- 禁止数字识自动别为电话号码，地址，EMail -->
+    <meta name="format-detection" content="telephone=no, address=no, email=no"/>
+
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari）-->
+    <!-- <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL"/> -->
+
+    <!-- 百度禁止转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="description" content=""/>
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <link rel="stylesheet" href="./main.css" />
+</head>
+<body>
+<script>
+    var images = [
+        {src: './images/big/(1).jpg', width: 960, height: 600},
+        {src: './images/big/(2).jpg', width: 960, height: 600},
+        {src: './images/big/(3).jpg', width: 960, height: 600},
+        {src: './images/big/(4).jpg', width: 960, height: 600},
+        {src: './images/big/(5).jpg', width: 960, height: 638},
+        {src: './images/big/(6).jpg', width: 960, height: 600},
+        {src: './images/big/(7).jpg', width: 960, height: 600},
+        {src: './images/big/(8).jpg', width: 960, height: 600},
+        {src: './images/big/(9).jpg', width: 960, height: 600},
+        {src: './images/big/(10).jpg', width: 960, height: 600},
+        {src: './images/big/(11).jpg', width: 960, height: 600},
+        {src: './images/big/(12).jpg', width: 960, height: 600},
+        {src: './images/big/(13).jpg', width: 960, height: 540},
+        {src: './images/big/(14).jpg', width: 960, height: 600},
+        {src: './images/big/(15).jpg', width: 960, height: 600},
+        {src: './images/big/(16).jpg', width: 480, height: 300},
+        {src: './images/big/(17).jpg', width: 480, height: 300},
+        {src: './images/big/(18).jpg', width: 480, height: 300},
+        {src: './images/big/(19).jpg', width: 480, height: 300},
+        {src: './images/big/(20).jpg', width: 480, height: 300},
+        {src: './images/big/(21).jpg', width: 480, height: 300},
+        {src: './images/big/(22).jpg', width: 480, height: 300},
+        {src: './images/big/(23).jpg', width: 480, height: 300},
+        {src: './images/big/(24).jpg', width: 480, height: 300},
+        {src: './images/big/(25).jpg', width: 480, height: 300}
+    ];
+    function templateDiv(image) {
+        html = '<div role="img" class="lazyload-img" style="width: ' + image.width + 'px;">' +
+            '<div style="padding: ' + image.height / image.width * 100 + '% 0 0 0;' + '">' +
+            '<img data-lazyload-original="' + image.src + '" />' +
+            '</div>' +
+            '</div>';
+        return html;
+    }
+</script>
+<div class="container-div">
+    <script>
+        var i,
+            len;
+        for (i = 0; i < 15; i += 1) {
+            document.write('<div class="img-wrap">');
+            document.write(templateDiv(images[i]));
+            document.write('</div>');
+        }
+    </script>
+</div>
+<div class="container-img">
+    <script>
+        for (i = 16; i < 26; i += 1) {
+            document.write('<div class="img-wrap">');
+            document.write('<img data-lazyload-original="./images/big/(' + i + ').jpg" />');
+            document.write('</div>');
+        }
+    </script>
+</div>
+<!--
+<script src="http://localhost:3001/concat/??lib/seajs/2.3.0/sea.js,lib/seajs-preload/1.0.0/seajs-preload.js,lib/seajs-css/1.0.4/seajs-css.js,lib/seajs-text/1.1.1/seajs-text.js,lib/seajs-combo/1.1.2/seajs-combo.js,lib/seajs-flush/1.0.1/seajs-flush.js,config.js"></script>
+-->
+<script src="//localhost:3001/concat/??lib/seajs/2.3.0/sea.js,config.js"></script>
+<script>
+    seajs.use('project/lazyload/demo/main');
+</script>
+</body>
+</html>
