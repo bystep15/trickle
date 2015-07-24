@@ -87,84 +87,9 @@
     <!--
     <link rel="canonical" href="http://www.example.com/">
     -->
+    <link rel="stylesheet" href="./main.css" />
 </head>
 <body>
-<style>
-    body {
-        margin: 0;
-        background-color: #ccc;
-    }
-
-    .container-div,
-    .container-img {
-        width: 960px;
-        margin: auto;
-        font-size: 0;
-    }
-
-    .container-div .img-wrap {
-        margin: 10px 0;
-    }
-
-    .container-img .img-wrap {
-        position: relative;
-        display: inline-block;
-        width: 50%;
-        padding-top: 31.25%;
-        font-size: 0;
-    }
-
-    .container-img .img-wrap img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: url(./images/placeholder.png) no-repeat center center;
-        background-size: 63px 75px;
-        will-change: transform;
-    }
-
-    @media (max-width: 720px) {
-        .container-div,
-        .container-img {
-            margin: 0 10px;
-            width: auto;
-        }
-    }
-
-    .lazyload-img {
-        display: inline-block;
-        max-width: 100%;
-    }
-
-    .lazyload-img > div {
-        position: relative;
-        display: block;
-        width: 100%;
-        background: #999 no-repeat center center;
-        background-size: cover;
-    }
-
-    .lazyload-img > div > img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url(./images/placeholder.png) no-repeat center center;
-        background-size: 63px 75px;
-        will-change: transform;
-        /*
-        -webkit-transform: translate3d(0, 0, 0);
-        -moz-transform: translate3d(0, 0, 0);
-        -ms-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-        */
-    }
-</style>
 <script>
     var images = [
         {src: './images/large/(1).jpg', width: 1920, height: 1200},
