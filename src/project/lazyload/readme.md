@@ -13,7 +13,7 @@ Tags: FE
 ``` html
 <div role="img" class="lazyload-img" style="width: 图片宽度px;">
     <div style="padding: 图片高宽百分比% 0 0 0;">
-        <img data-lazyload-original="图片路径" />
+        <img data-lazyload-original="图片路径" data-lazyload-state="interactive|loading|complete|error" />
     </div>
 </div>
 ```
@@ -27,18 +27,17 @@ Tags: FE
     position: relative;
     display: block;
     width: 100%;
-    background: #999 no-repeat center center;
-    background-size: cover;
+    background: #999 url(./images/placeholder.png) no-repeat center center;
 }
 
 .lazyload-img > div > img {
     position: absolute;
     top: 0;
     left: 0;
+    display: block;
     width: 100%;
     height: 100%;
-    background: url(占位图片地址) no-repeat center center;
-    background-size: 63px 75px;
+    will-change: transform;
     /* 下面会适当加快图片的渲染，但由于手机浏览器渲染问题，会导致重复渲染（不请求）
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
@@ -46,10 +45,14 @@ Tags: FE
     transform: translate3d(0, 0, 0);
     */
 }
+
+.ie7 .lazyload-img > div > img {
+    height: auto;
+}
 ```
 第二种情况，img显示的尺寸是固定的，比如已经通过CSS样式确定
 ``` html
-<img src="" data-lazyload-original="真实图片地址" data-lazyload-state="interactive|loading|complete" />
+<img data-lazyload-original="真实图片地址" data-lazyload-state="interactive|loading|complete|error" />
 ```
 
 ##备注
