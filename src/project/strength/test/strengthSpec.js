@@ -5,7 +5,9 @@ describe('Strength Test Suite', function () {
 
     function inject(callback) {
         return function (done) {
-            seajs.use('/project/strength/js/strength', function (Strength) {
+            seajs.use(['/project/strength/js/strength', 'jquery'], function (Strength, $) {
+                var container = $('<div><input type="password" /></div>');
+                input = container.find('input')[0];
 
                 callback(Strength);
 
@@ -13,11 +15,6 @@ describe('Strength Test Suite', function () {
             });
         };
     }
-
-    beforeEach(function () {
-        var container = $('<div><input type="password" /></div>');
-        input = container.find('input')[0];
-    });
 
     describe('check', function () {
         it('check方法应该返回一个包含factor属性和message属性的object', inject(function (Strength) {
