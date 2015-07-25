@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]><html class="ie6" lang="zh-cn"><![endif]-->
-<!--[if IE 7]><html class="ie7" lang="zh-cn"><![endif]-->
-<!--[if IE 8]><html class="ie8" lang="zh-cn"><![endif]-->
-<!--[if gt IE 8]><!--><html lang="zh-cn"><!--<![endif]-->
+<!--[if lt IE 7]>
+<html class="ie6" lang="zh-cn"><![endif]-->
+<!--[if IE 7]>
+<html class="ie7" lang="zh-cn"><![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="zh-cn"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="zh-cn"><!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>EXIF Demo</title>
     <style>
         body {
@@ -23,11 +27,13 @@
             margin: 0;
             padding: 0;
         }
+
         #ulFileList li {
             display: inline-block;
             width: 200px;
             padding: 10px;
         }
+
         #ulFileList li img {
             width: 200px;
             height: auto;
@@ -35,15 +41,15 @@
     </style>
 </head>
 <body>
-    <div id="divDrop">
-        <ul id="ulFileList">
-        </ul>
-    </div>
-    <form action="" method="post">
-        <input type="file" multiple="multiple" />
-    </form>
-    <script src="../js/exif.js"></script>
-    <script>
+<div id="divDrop">
+    <ul id="ulFileList">
+    </ul>
+</div>
+<form action="" method="post">
+    <input type="file" multiple="multiple"/>
+</form>
+<script src="../js/exif.js"></script>
+<script>
     (function (global, $, document) {
         var container = document.getElementById('divDrop'),
             fileList = document.getElementById('ulFileList');
@@ -60,8 +66,8 @@
 
         container.addEventListener('drop', function (e) {
             var files = e.dataTransfer.files,
-                //file = files[0].slice(0, Math.pow(2, 16)),
-                //file = files[0],
+            //file = files[0].slice(0, Math.pow(2, 16)),
+            //file = files[0],
                 time = Date.now();
 
             e.stopPropagation();
@@ -78,14 +84,14 @@
 
                     try {
                         blob = getThumbnail(reader.result);
-                    } catch(ex) {
+                    } catch (ex) {
                         return;
                     }
                     url = global.URL.createObjectURL(blob);
-             
+
                     img.src = url;
                     global.URL.revokeObjectURL(url);
-             
+
                     li.appendChild(img);
                     li.appendChild(span);
                     fileList.appendChild(li);
@@ -93,11 +99,11 @@
                 reader.readAsArrayBuffer(file);
             }
 
-            for(i = 0, len = files.length; i < len; i += 1) {
+            for (i = 0, len = files.length; i < len; i += 1) {
                 load(files[i].slice(0, Math.pow(2, 16)));
             }
         });
     }(this, this.jQuery, this.document));
-    </script>
+</script>
 </body>
 </html>

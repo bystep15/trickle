@@ -36,7 +36,7 @@
                 //length: undefined
             };
 
- 
+
         for (var i = 0; i < count; i += 1, offset += 12) {
             tag = dataView.getUint16(offset, isLittleEndian);
             value = dataView.getUint32(offset + 8, isLittleEndian);
