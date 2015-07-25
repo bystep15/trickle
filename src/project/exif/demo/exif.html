@@ -1,109 +1,95 @@
 <!DOCTYPE html>
 <!--[if lt IE 7]>
-<html class="ie6" lang="zh-cn"><![endif]-->
+<html lang="zh-cmn-Hans" class="ie6"><![endif]-->
 <!--[if IE 7]>
-<html class="ie7" lang="zh-cn"><![endif]-->
+<html lang="zh-cmn-Hans" class="ie7"><![endif]-->
 <!--[if IE 8]>
-<html class="ie8" lang="zh-cn"><![endif]-->
-<!--[if gt IE 8]><!-->
-<html lang="zh-cn"><!--<![endif]-->
+<html lang="zh-cmn-Hans" class="ie8"><![endif]-->
+<!--[if (gte IE 9)]><!-->
+<html lang="zh-cmn-Hans"><!--<![endif]-->
 <head>
-    <meta charset="utf-8"/>
-    <title>EXIF Demo</title>
-    <style>
-        body {
-            width: 900px;
-            margin: 0 auto;
-        }
+    <meta charset="UTF-8">
 
-        #divDrop {
-            margin: 10px 0 0;
-            padding: 9px;
-            border: dotted 1px;
-            min-height: 200px;
-        }
+    <title>EXIF</title>
 
-        #ulFileList {
-            margin: 0;
-            padding: 0;
-        }
+    <!-- 优先使用 IE 最新版本和 Chrome -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-        #ulFileList li {
-            display: inline-block;
-            width: 200px;
-            padding: 10px;
-        }
+    <!-- 360 使用Google Chrome Frame -->
+    <meta name="renderer" content="webkit"/>
 
-        #ulFileList li img {
-            width: 200px;
-            height: auto;
-        }
-    </style>
+    <!-- 添加 favicon icon -->
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+
+    <!-- http://bystep.duapp.com/drip/css/yarn.html#/1/1 -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"/>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <link rel="icon" sizes="192x192" href="img/chrome-touch-icon-192x192.png"/>
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="img/ms-touch-icon-144x144-precomposed.png"/>
+    <meta name="msapplication-TileColor" content="#3372DF"/>
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no"/>
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <!-- 是否启用 WebApp 全屏模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- 设置状态栏的背景颜色，只有在 `"apple-mobile-web-app-capable" content="yes"` 时生效 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="标题"/>
+
+    <!-- rel 参数： apple-touch-icon 图片自动处理成圆角和高光等效果。 apple-touch-icon-precomposed 禁止系统自动添加效果，直接显示设计原图。-->
+    <!-- iPhone 和 iTouch，默认 57x57 像素，必须有 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/icon-57.png"/>
+    <!-- Retina iPhone 和 Retina iTouch -->
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icon-114.png"/>
+    <!-- iPad -->
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icon-72.png"/>
+    <!-- Retina iPad -->
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/icon-144.png"/>
+    <!-- iPhone 6 -->
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/icon-144.png"/>
+    <!-- iPhone 6 plus -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icon-144.png"/>
+
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true"/>
+
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait"/>
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes"/>
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application"/>
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait"/>
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true"/>
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app"/>
+
+    <!-- 禁止数字识自动别为电话号码，地址，EMail -->
+    <meta name="format-detection" content="telephone=no, address=no, email=no"/>
+
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari）-->
+    <!-- <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL"/> -->
+
+    <!-- 百度禁止转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="description" content=""/>
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+    <link rel="stylesheet" href="thumbnail/main.css" />
 </head>
 <body>
-<div id="divDrop">
-    <ul id="ulFileList">
-    </ul>
-</div>
-<form action="" method="post">
-    <input type="file" multiple="multiple"/>
-</form>
-<script src="../js/exif.js"></script>
-<script>
-    (function (global, $, document) {
-        var container = document.getElementById('divDrop'),
-            fileList = document.getElementById('ulFileList');
 
-        container.addEventListener('dragenter', function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-        });
-
-        container.addEventListener('dragover', function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-        });
-
-        container.addEventListener('drop', function (e) {
-            var files = e.dataTransfer.files,
-            //file = files[0].slice(0, Math.pow(2, 16)),
-            //file = files[0],
-                time = Date.now();
-
-            e.stopPropagation();
-            e.preventDefault();
-
-            function load(file) {
-                var reader = new FileReader();
-                reader.onload = function () {
-                    var li = document.createElement('li'),
-                        img = document.createElement('img'),
-                        span = document.createElement('span'),
-                        blob,
-                        url;
-
-                    try {
-                        blob = getThumbnail(reader.result);
-                    } catch (ex) {
-                        return;
-                    }
-                    url = global.URL.createObjectURL(blob);
-
-                    img.src = url;
-                    global.URL.revokeObjectURL(url);
-
-                    li.appendChild(img);
-                    li.appendChild(span);
-                    fileList.appendChild(li);
-                };
-                reader.readAsArrayBuffer(file);
-            }
-
-            for (i = 0, len = files.length; i < len; i += 1) {
-                load(files[i].slice(0, Math.pow(2, 16)));
-            }
-        });
-    }(this, this.jQuery, this.document));
-</script>
 </body>
 </html>

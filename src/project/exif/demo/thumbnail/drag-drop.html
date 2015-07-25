@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="zh-cmn-Hans" class="ie6"><![endif]-->
+<!--[if IE 7]>
+<html lang="zh-cmn-Hans" class="ie7"><![endif]-->
+<!--[if IE 8]>
+<html lang="zh-cmn-Hans" class="ie8"><![endif]-->
+<!--[if (gte IE 9)]><!-->
+<html lang="zh-cmn-Hans"><!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+    <title>Thumbnail</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"/>
+    <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+<div class="drop-area">
+    <ul class="thumbnail-container"></ul>
+</div>
+
+<script src="//localhost:3001/concat/??lib/seajs/2.3.0/sea.js,config.js"></script>
+<script>
+    seajs.use('project/exif/demo/thumbnail/drag-drop');
+</script>
+</body>
+</html>
