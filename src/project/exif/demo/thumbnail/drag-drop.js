@@ -39,6 +39,9 @@ define(function (require) {
 
         for (var i = 0, len = files.length; i < len; i += 1) {
             EXIF.getThumbnail(files[i], load);
+            EXIF.getTag(files[i], 0x0112, function (value) {
+                console.log(value);
+            });
         }
     });
 });

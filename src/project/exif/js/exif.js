@@ -30,6 +30,13 @@ define(function (require, exports, module) {
         0x0202: 'JPEGInterchangeFormatLength'
     };
 
+    function getTag(dataView, tag) {
+        // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
+        var isLittleEndian = dataView.getUint16(TIFF_OFFSET) == II;
+
+
+    }
+
     function getThumbnail(dataView) {
 
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
@@ -63,16 +70,23 @@ define(function (require, exports, module) {
     }
 
     function wrap(action) {
-        return function (file, callback) {
+        return function (file, tag, callback) {
             var reader = new FileReader();
+
+            if (callback === undefined && typeof tag === 'function') {
+                callback = tag;
+                tag = undefined;
+            }
+
             reader.onload = function () {
-                callback(action(new DataView(reader.result)));
+                callback(action(new DataView(reader.result), tag));
             };
             reader.readAsArrayBuffer(file.slice(0, Math.pow(2, 16)));
         };
     }
 
     module.exports = {
-        getThumbnail: wrap(getThumbnail)
+        getThumbnail: wrap(getThumbnail),
+        getTag: wrap(getTag)
     };
 });
