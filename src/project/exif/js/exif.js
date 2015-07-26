@@ -35,34 +35,31 @@ define(function (require, exports, module) {
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
         var isLittleEndian = dataView.getUint16(TIFF_OFFSET) == II;
 
-        var Ifd1Offset = dataView.getUint32(IFD_OFFSET, isLittleEndian) + TIFF_OFFSET;
+        var ifdOffset = dataView.getUint32(IFD_OFFSET, isLittleEndian) + TIFF_OFFSET;
 
-        Ifd1Offset += dataView.getUint16(Ifd1Offset, isLittleEndian) * 12 + 2;
-        Ifd1Offset = dataView.getUint32(Ifd1Offset, isLittleEndian) + TIFF_OFFSET;
+        ifdOffset += dataView.getUint16(ifdOffset, isLittleEndian) * 12 + 2;
+        ifdOffset = dataView.getUint32(ifdOffset, isLittleEndian) + TIFF_OFFSET;
 
-        var count = dataView.getUint16(Ifd1Offset, isLittleEndian),
-            offset = Ifd1Offset + 2,
+        var count = dataView.getUint16(ifdOffset, isLittleEndian),
+            start = ifdOffset + 2,
             tag,
             value,
-            thumbnail = {
-                //offset: undefined,
-                //length: undefined
-            };
+            offset,
+            length;
 
 
-        for (var i = 0; i < count; i += 1, offset += 12) {
-            tag = dataView.getUint16(offset, isLittleEndian);
-            value = dataView.getUint32(offset + 8, isLittleEndian);
+        for (var i = 0; i < count; i += 1, start += 12) {
+            tag = dataView.getUint16(start, isLittleEndian);
+            value = dataView.getUint32(start + 8, isLittleEndian);
             if (tag === 0x0201) {
-                thumbnail.offset = value + TIFF_OFFSET;
+                offset = value + TIFF_OFFSET;
             }
             if (tag === 0x0202) {
-                thumbnail.length = value + TIFF_OFFSET;
+                length = value + TIFF_OFFSET;
             }
         }
 
-        var blob = new Blob([dataView.buffer.slice(thumbnail.offset, thumbnail.offset + thumbnail.length)]);
-        return blob;
+        return new Blob([dataView.buffer.slice(offset, offset + length)]);
     }
 
     function wrap(action) {
