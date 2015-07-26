@@ -4,34 +4,21 @@ define(function (require) {
         area = document.querySelector('.drop-area'),
         container = document.querySelector('.thumbnail-container');
 
-    function load(file) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var li = document.createElement('li'),
-                img = document.createElement('img'),
-                span = document.createElement('span'),
-                blob,
-                url;
-
-            try {
-                blob = EXIF.getThumbnail(reader.result);
-            } catch (ex) {
-                return;
-            }
+    function load(blob) {
+        var li = document.createElement('li'),
+            img = document.createElement('img'),
+            span = document.createElement('span'),
             url = URL.createObjectURL(blob);
 
-            img.src = url;
-            img.onload = function () {
-                img.onload = null;
-                URL.revokeObjectURL(url);
-            };
-
-
-            li.appendChild(img);
-            li.appendChild(span);
-            container.appendChild(li);
+        img.src = url;
+        img.onload = function () {
+            img.onload = null;
+            URL.revokeObjectURL(url);
         };
-        reader.readAsArrayBuffer(file.slice(0, Math.pow(2, 16)));
+
+        li.appendChild(img);
+        li.appendChild(span);
+        container.appendChild(li);
     }
 
     area.addEventListener('dragenter', function (e) {
@@ -50,8 +37,8 @@ define(function (require) {
         e.stopPropagation();
         e.preventDefault();
 
-        for (i = 0, len = files.length; i < len; i += 1) {
-            load(files[i]);
+        for (var i = 0, len = files.length; i < len; i += 1) {
+            EXIF.getThumbnail(files[i], load);
         }
     });
 });
