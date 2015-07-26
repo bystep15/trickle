@@ -13,8 +13,8 @@ define(function (require, exports, module) {
         0x0202: 'JPEGInterchangeFormatLength'
     };
 
-    function getThumbnail(file) {
-        var dataView = new DataView(file);
+    function getThumbnail(buffer) {
+        var dataView = new DataView(buffer);
 
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
         var isLittleEndian = dataView.getUint16(TIFF_OFFSET) == II;
@@ -47,9 +47,7 @@ define(function (require, exports, module) {
             }
         }
 
-        //dataView = new DataView(file, thumbnail.offset, thumbnail.length);
-        //var blob = new Blob([dataView.buffer]);
-        var blob = new Blob([file.slice(thumbnail.offset, thumbnail.offset + thumbnail.length)]);
+        var blob = new Blob([buffer.slice(thumbnail.offset, thumbnail.offset + thumbnail.length)]);
         return blob;
     };
 

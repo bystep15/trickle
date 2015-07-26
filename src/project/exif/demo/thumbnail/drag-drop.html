@@ -23,6 +23,19 @@
 
 <script src="//localhost:3001/concat/??lib/seajs/2.3.0/sea.js,config.js"></script>
 <script>
+    // http://stackoverflow.com/questions/21440050/arraybuffer-prototype-slice-shim-for-ie
+    // https://connect.microsoft.com/IE/feedback/details/781472/arraybuffer-prototype-slice-is-not-implemented
+    // slice is not implemented on IE. Implementing our own version if it is not supported.
+    if (!ArrayBuffer.prototype.slice)
+        ArrayBuffer.prototype.slice = function (start, end) {
+            var that = new Uint8Array(this);
+            if (end == undefined) end = that.length;
+            var result = new ArrayBuffer(end - start);
+            var resultArray = new Uint8Array(result);
+            for (var i = 0; i < resultArray.length; i++)
+                resultArray[i] = that[i + start];
+            return result;
+        }
     seajs.use('project/exif/demo/thumbnail/drag-drop');
 </script>
 </body>
