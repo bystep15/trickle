@@ -4,6 +4,7 @@ define(function (require, exports, module) {
         HashMap = require('./hashmap'),
         Loader = require('./loader'),
         global = window,
+        animationFrame = require('../../util/animation-frame/js/animation-frame'),
         instance;
 
     function Lazyload() {
@@ -19,15 +20,16 @@ define(function (require, exports, module) {
         });
 
         this.listen();
+        this.update = $.proxy(this.update, this);
     }
 
     Lazyload.prototype = {
         constructor: Lazyload,
 
         listen: function () {
-            var update = $.proxy(this.update, this);
-            this.$global.on('resize', update);
-            this.$global.on('scroll', update);
+            var request = $.proxy(this.request, this);
+            this.$global.on('resize', request);
+            this.$global.on('scroll', request);
         },
 
         load: function () {
@@ -67,9 +69,19 @@ define(function (require, exports, module) {
             element.setAttribute('data-lazyload-state', 'interactive');
         },
 
+        request: function () {
+            if (this.requesting) {
+                return;
+            }
+            this.requesting = true;
+            animationFrame.request(this.update);
+        },
+
         update: function () {
             var that = this,
                 images = this.hashmap.values();
+
+            this.requesting = false;
 
             if (images.length === 0) {
                 return;
