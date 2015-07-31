@@ -1,10 +1,11 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var global = window;
+    var global = window,
+        $ = require('jquery');
 
     function detect(prefix) {
-        if (prefix) {
+        if (!prefix) {
             return global.requestAnimationFrame &&
                 (global.cancelAnimationFrame || global.cancelRequestAnimationFrame);
         }
@@ -58,7 +59,7 @@ define(function (require, exports, module) {
     }
 
     module.exports = {
-        request: requestAnimationFrame().bind(global),
-        cancel: cancelAnimationFrame().bind(global)
+        request: $.proxy(requestAnimationFrame(), global),
+        cancel: $.proxy(cancelAnimationFrame(), global)
     };
 });
