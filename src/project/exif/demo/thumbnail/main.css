@@ -1,0 +1,23 @@
+.drop-area {
+    width: 960px;
+    padding: 10px;
+    margin: auto;
+    border: dotted 1px;
+    min-height: 200px;
+}
+
+.thumbnail-container {
+    margin: 0;
+    padding: 0;
+}
+
+.thumbnail-container li {
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+}
+
+.thumbnail-container li img {
+    width: 200px;
+    height: auto;
+}
