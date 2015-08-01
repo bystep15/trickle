@@ -28,7 +28,9 @@ define(function (require, exports, module) {
 
     var TAGS = {
         JpegIFOffset: 0x0201,
-        JpegIFByteCount: 0x0202
+        JpegIFByteCount: 0x0202,
+        ExifOffset: 0x8769,
+        GPSInfo: 0x8825
     };
 
     function isExif(dataView) {
@@ -51,11 +53,105 @@ define(function (require, exports, module) {
         throw new Error('传入的TIFF Byte Order值错误！');
     }
 
+    function getAscii(dataView, start, count) {
+        var chars = [];
+        for (var i = 0; i < count; i += 1) {
+            chars.push(String.fromCharCode(dataView.getUint8(start + i)));
+        }
+        return chars.join('');
+    }
+
+    function getRational(dataView, start) {
+        var numerator = dataView.getUint32(start);
+        var denominator = dataView.getUint32(start + 4);
+        return numerator / denominator;
+    }
+
+    function getSRational(dataView, start) {
+        var numerator = dataView.getInt32(start);
+        var denominator = dataView.getInt32(start + 4);
+        return numerator / denominator;
+    }
+
+    function readEntry(dataView, start, littleEndian) {
+        var tag = dataView.getUint16(start, littleEndian);
+        var type = dataView.getUint16(start + 2, littleEndian);
+        var size = dataView.getUint32(start + 4, littleEndian);
+        var value,
+            position;
+        //value = dataView.getUint32(start + 8, littleEndian);
+
+        switch (type) {
+            case 1:
+                // 忽略size>1
+                value = dataView.getUint8(start + 8);
+                break;
+            case 2:
+            case 7:
+                if (size > 4) {
+                    position = dataView.getUint32(start + 8, littleEndian) + TIFF_POSITION;
+                } else {
+                    position = start + 8;
+                }
+                value = getAscii(dataView, position, size);
+                break;
+            case 3:
+                // 忽略size>1
+                value = dataView.getUint16(start + 8, littleEndian);
+                break;
+            case 4:
+                // 忽略size>1
+                value = dataView.getUint32(start + 8, littleEndian);
+                break;
+            case 5:
+                position = dataView.getUint32(start + 8, littleEndian) + TIFF_POSITION;
+                value = getRational(dataView, position);
+                break;
+            case 9:
+                // 忽略size>1
+                value = dataView.getInt32(start + 8, littleEndian);
+                break;
+            case 10:
+                position = dataView.getUint32(start + 8, littleEndian) + TIFF_POSITION;
+                value = getSRational(dataView, position);
+                break;
+        }
+
+        console.log(tag.toString(16), type, size, value);
+        return {
+            tag: tag,
+            value: value
+        };
+    }
+
+    function readIFD(dataView, position, littleEndian, tags) {
+        var count = dataView.getUint16(position, littleEndian);
+        var start = position + 2;
+        var entry;
+
+        for (var i = 0; i < count; i += 1, start += 12) {
+            entry = readEntry(dataView, start, littleEndian);
+            tags[entry.tag] = entry.value;
+        }
+
+        var offset = position + count * 12 + 2;
+        position = dataView.getUint32(offset, littleEndian) + TIFF_POSITION;
+        return position;
+    }
+
     function getTag(dataView, tag) {
-        // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
+        if (!isExif(dataView)) {
+            return;
+        }
+        var tags = {};
         var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
-
-
+        var position = dataView.getUint32(IFD0_POSITION, littleEndian) + TIFF_POSITION;
+        position = readIFD(dataView, position, littleEndian, tags);
+        readIFD(dataView, position, littleEndian, tags);
+        readIFD(dataView, tags[TAGS.ExifOffset] + TIFF_POSITION, littleEndian, tags);
+        readIFD(dataView, tags[TAGS.GPSInfo] + TIFF_POSITION, littleEndian, tags);
+        console.log(tags);
+        return tags[tag];
     }
 
     function getThumbnail(dataView) {
