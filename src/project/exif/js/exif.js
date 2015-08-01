@@ -33,6 +33,55 @@ define(function (require, exports, module) {
         GPSInfo: 0x8825
     };
 
+    // http://baike.baidu.com/view/22006.htm
+    // http://blog.csdn.net/lsiyun/article/details/5346754
+    var NAMES = {
+        0x010E: 'ImageDescription',
+        0x013B: 'Artist',
+        0x010F: 'Make',
+        0x0110: 'Model',
+        /*
+         Value	0th Row	0th Column
+         1	top	left side
+         2	top	right side
+         3	bottom	right side
+         4	bottom	left side
+         5	left side	top
+         6	right side	top
+         7	right side	bottom
+         8	left side	bottom
+         */
+        0x0112: 'Orientation',
+        0x011A: 'XResolution',
+        0x011B: 'YResolution',
+        0x0128: 'ResolutionUnit',
+        0x0131: 'Software',
+        0x0132: 'DateTime',
+        0x0213: 'YCbCrPositioning',
+        0x8769: 'ExifOffset',
+        0x829A: 'ExposureTime',
+        0x829D: 'FNumber',
+        0x8822: 'ExposureProgram',
+        0x8827: 'ISOSpeedRatings',
+        0x9000: 'ExifVersion',
+        0x9003: 'DateTimeOriginal',
+        0x9004: 'DateTimeDigitized',
+        0x9204: 'ExposureBiasValue',
+        0x9205: 'MaxApertureValue',
+        0x9207: 'MeteringMode',
+        0x9208: 'Lightsource',
+        0x9209: 'Flash',
+        0x920A: 'FocalLength',
+        0x927C: 'MakerNote',
+        0x9286: 'UserComment',
+        0xA000: 'FlashPixVersion',
+        0xA001: 'ColorSpace',
+        0xA002: 'ExifImageWidth',
+        0xA003: 'ExifImageLength',
+        0xA433: 'LensMake',
+        0xA434: 'LensModel'
+    };
+
     function isExif(dataView) {
         if (dataView.getUint16(MARKER_EXIF_OFFSET) === MARKER_EXIF) {
             return true;
@@ -138,11 +187,12 @@ define(function (require, exports, module) {
         return position;
     }
 
-    function getAllTag(dataView) {
+    function getAllTags(dataView) {
         if (!isExif(dataView)) {
             return;
         }
         var tags = {};
+        var result = {};
         var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
         var position = dataView.getUint32(IFD0_POSITION, littleEndian) + TIFF_POSITION;
         position = readIFD(dataView, position, littleEndian, tags);
@@ -160,28 +210,30 @@ define(function (require, exports, module) {
             var begin = tags[TAGS.JpegIFOffset] + TIFF_POSITION;
             var end = begin + tags[TAGS.JpegIFByteCount] + TIFF_POSITION;
 
-            tags.thumbnail = new Blob([dataView.buffer.slice(begin, end)]);
+            result.thumbnail = new Blob([dataView.buffer.slice(begin, end)]);
         }
-        return tags;
+        var name;
+        for (var i in tags) {
+            name = NAMES[i];
+            if (name) {
+                result[name] = tags[i];
+            }
+        }
+        return result;
     }
 
     function wrap(action) {
-        return function (file, tag, callback) {
+        return function (file, callback) {
             var reader = new FileReader();
 
-            if (callback === undefined && typeof tag === 'function') {
-                callback = tag;
-                tag = undefined;
-            }
-
             reader.onload = function () {
-                callback(action(new DataView(reader.result), tag));
+                callback(action(new DataView(reader.result)));
             };
             reader.readAsArrayBuffer(file.slice(0, Math.pow(2, 16)));
         };
     }
 
     module.exports = {
-        getAllTag: wrap(getAllTag)
+        getAllTags: wrap(getAllTags)
     };
 });

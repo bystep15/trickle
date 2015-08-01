@@ -38,7 +38,7 @@ define(function (require) {
         e.preventDefault();
 
         for (var i = 0, len = files.length; i < len; i += 1) {
-            EXIF.getAllTag(files[i], function (value) {
+            EXIF.getAllTags(files[i], function (value) {
                 console.log(value);
                 load(value.thumbnail);
             });
