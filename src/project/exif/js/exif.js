@@ -21,8 +21,17 @@ define(function (require, exports, module) {
 
     var II = 0x4949;
     var MM = 0x4d4d;
+    var MARKER_EXIF = 0xffe1;
+    var MARKER_EXIF_OFFSET = 2;
     var TIFF_OFFSET = 12;
     var IFD_OFFSET = 16;
+
+    function isExif(dataView) {
+        if (dataView.getUint16(MARKER_EXIF_OFFSET) === MARKER_EXIF) {
+            return true;
+        }
+        return false;
+    }
 
     function isLittleEndian(value) {
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
@@ -45,6 +54,9 @@ define(function (require, exports, module) {
     }
 
     function getThumbnail(dataView) {
+        if (!isExif(dataView)) {
+            return;
+        }
         var littleEndian = isLittleEndian(dataView.getUint16(TIFF_OFFSET));
 
         var ifdOffset = dataView.getUint32(IFD_OFFSET, littleEndian) + TIFF_OFFSET;
