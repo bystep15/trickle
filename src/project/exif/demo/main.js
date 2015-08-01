@@ -1,5 +1,5 @@
 define(function (require) {
-    var EXIF = require('../../js/exif'),
+    var EXIF = require('../js/exif'),
         URL = window.URL || window.webkitURL,
         area = document.querySelector('.drop-area'),
         container = document.querySelector('.thumbnail-container');
