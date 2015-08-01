@@ -24,30 +24,35 @@ define(function (require, exports, module) {
     var TIFF_OFFSET = 12;
     var IFD_OFFSET = 16;
 
-    var ExifTags = {
-        0xFFE1: 'JPEG Marker',
-        0x0201: 'JPEGInterchangeFormat',
-        0x0202: 'JPEGInterchangeFormatLength'
-    };
+    function isLittleEndian(value) {
+        // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
+        if (value === II) {
+            return true;
+        }
+
+        if (value === MM) {
+            return false;
+        }
+
+        throw new Error('传入的TIFF Byte Order值错误！');
+    }
 
     function getTag(dataView, tag) {
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
-        var isLittleEndian = dataView.getUint16(TIFF_OFFSET) == II;
+        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_OFFSET));
 
 
     }
 
     function getThumbnail(dataView) {
+        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_OFFSET));
 
-        // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
-        var isLittleEndian = dataView.getUint16(TIFF_OFFSET) == II;
+        var ifdOffset = dataView.getUint32(IFD_OFFSET, littleEndian) + TIFF_OFFSET;
 
-        var ifdOffset = dataView.getUint32(IFD_OFFSET, isLittleEndian) + TIFF_OFFSET;
+        ifdOffset += dataView.getUint16(ifdOffset, littleEndian) * 12 + 2;
+        ifdOffset = dataView.getUint32(ifdOffset, littleEndian) + TIFF_OFFSET;
 
-        ifdOffset += dataView.getUint16(ifdOffset, isLittleEndian) * 12 + 2;
-        ifdOffset = dataView.getUint32(ifdOffset, isLittleEndian) + TIFF_OFFSET;
-
-        var count = dataView.getUint16(ifdOffset, isLittleEndian),
+        var count = dataView.getUint16(ifdOffset, littleEndian),
             start = ifdOffset + 2,
             tag,
             value,
@@ -56,8 +61,8 @@ define(function (require, exports, module) {
 
 
         for (var i = 0; i < count; i += 1, start += 12) {
-            tag = dataView.getUint16(start, isLittleEndian);
-            value = dataView.getUint32(start + 8, isLittleEndian);
+            tag = dataView.getUint16(start, littleEndian);
+            value = dataView.getUint32(start + 8, littleEndian);
             if (tag === 0x0201) {
                 offset = value + TIFF_OFFSET;
             }
