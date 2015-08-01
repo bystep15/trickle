@@ -117,7 +117,6 @@ define(function (require, exports, module) {
                 break;
         }
 
-        console.log(tag.toString(16), type, size, value);
         return {
             tag: tag,
             value: value
@@ -139,7 +138,7 @@ define(function (require, exports, module) {
         return position;
     }
 
-    function getTag(dataView, tag) {
+    function getAllTag(dataView) {
         if (!isExif(dataView)) {
             return;
         }
@@ -147,47 +146,23 @@ define(function (require, exports, module) {
         var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
         var position = dataView.getUint32(IFD0_POSITION, littleEndian) + TIFF_POSITION;
         position = readIFD(dataView, position, littleEndian, tags);
-        readIFD(dataView, position, littleEndian, tags);
-        readIFD(dataView, tags[TAGS.ExifOffset] + TIFF_POSITION, littleEndian, tags);
-        readIFD(dataView, tags[TAGS.GPSInfo] + TIFF_POSITION, littleEndian, tags);
-        console.log(tags);
-        return tags[tag];
-    }
-
-    function getThumbnail(dataView) {
-        if (!isExif(dataView)) {
-            return;
+        if (position) {
+            readIFD(dataView, position, littleEndian, tags);
         }
-        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
-        var position = dataView.getUint32(IFD0_POSITION, littleEndian) + TIFF_POSITION;
-        var count = dataView.getUint16(position, littleEndian);
-        var offset = position + count * 12 + 2;
-        position = dataView.getUint32(offset, littleEndian) + TIFF_POSITION;
-
-        count = dataView.getUint16(position, littleEndian);
-        var start = position + 2;
-        var tag;
-        var type;
-        var size;
-        var value;
-        var begin;
-        var end;
-
-
-        for (var i = 0; i < count; i += 1, start += 12) {
-            tag = dataView.getUint16(start, littleEndian);
-            type = dataView.getUint16(start + 2, littleEndian);
-            size = dataView.getUint32(start + 4, littleEndian);
-            value = dataView.getUint32(start + 8, littleEndian);
-            if (tag === TAGS.JpegIFOffset) {
-                begin = value + TIFF_POSITION;
-            }
-            if (tag === TAGS.JpegIFByteCount) {
-                end = begin + TIFF_POSITION + value;
-            }
+        if (tags[TAGS.ExifOffset]) {
+            readIFD(dataView, tags[TAGS.ExifOffset] + TIFF_POSITION, littleEndian, tags);
+        }
+        if (tags[TAGS.GPSInfo]) {
+            readIFD(dataView, tags[TAGS.GPSInfo] + TIFF_POSITION, littleEndian, tags);
         }
 
-        return new Blob([dataView.buffer.slice(begin, end)]);
+        if (tags[TAGS.JpegIFOffset] && tags[TAGS.JpegIFByteCount]) {
+            var begin = tags[TAGS.JpegIFOffset] + TIFF_POSITION;
+            var end = begin + tags[TAGS.JpegIFByteCount] + TIFF_POSITION;
+
+            tags.thumbnail = new Blob([dataView.buffer.slice(begin, end)]);
+        }
+        return tags;
     }
 
     function wrap(action) {
@@ -207,7 +182,6 @@ define(function (require, exports, module) {
     }
 
     module.exports = {
-        getThumbnail: wrap(getThumbnail),
-        getTag: wrap(getTag)
+        getAllTag: wrap(getAllTag)
     };
 });
