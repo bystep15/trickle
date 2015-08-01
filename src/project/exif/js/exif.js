@@ -23,8 +23,13 @@ define(function (require, exports, module) {
     var MM = 0x4d4d;
     var MARKER_EXIF = 0xffe1;
     var MARKER_EXIF_OFFSET = 2;
-    var TIFF_OFFSET = 12;
-    var IFD_OFFSET = 16;
+    var TIFF_POSITION = 12;
+    var IFD0_POSITION = 16;
+
+    var TAGS = {
+        JpegIFOffset: 0x0201,
+        JpegIFByteCount: 0x0202
+    };
 
     function isExif(dataView) {
         if (dataView.getUint16(MARKER_EXIF_OFFSET) === MARKER_EXIF) {
@@ -48,7 +53,7 @@ define(function (require, exports, module) {
 
     function getTag(dataView, tag) {
         // Little-Endian就是低位字节排放在内存的低地址端，高位字节排放在内存的高地址端。
-        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_OFFSET));
+        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
 
 
     }
@@ -57,33 +62,36 @@ define(function (require, exports, module) {
         if (!isExif(dataView)) {
             return;
         }
-        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_OFFSET));
+        var littleEndian = isLittleEndian(dataView.getUint16(TIFF_POSITION));
+        var position = dataView.getUint32(IFD0_POSITION, littleEndian) + TIFF_POSITION;
+        var count = dataView.getUint16(position, littleEndian);
+        var offset = position + count * 12 + 2;
+        position = dataView.getUint32(offset, littleEndian) + TIFF_POSITION;
 
-        var ifdOffset = dataView.getUint32(IFD_OFFSET, littleEndian) + TIFF_OFFSET;
-
-        ifdOffset += dataView.getUint16(ifdOffset, littleEndian) * 12 + 2;
-        ifdOffset = dataView.getUint32(ifdOffset, littleEndian) + TIFF_OFFSET;
-
-        var count = dataView.getUint16(ifdOffset, littleEndian),
-            start = ifdOffset + 2,
-            tag,
-            value,
-            offset,
-            length;
+        count = dataView.getUint16(position, littleEndian);
+        var start = position + 2;
+        var tag;
+        var type;
+        var size;
+        var value;
+        var begin;
+        var end;
 
 
         for (var i = 0; i < count; i += 1, start += 12) {
             tag = dataView.getUint16(start, littleEndian);
+            type = dataView.getUint16(start + 2, littleEndian);
+            size = dataView.getUint32(start + 4, littleEndian);
             value = dataView.getUint32(start + 8, littleEndian);
-            if (tag === 0x0201) {
-                offset = value + TIFF_OFFSET;
+            if (tag === TAGS.JpegIFOffset) {
+                begin = value + TIFF_POSITION;
             }
-            if (tag === 0x0202) {
-                length = value + TIFF_OFFSET;
+            if (tag === TAGS.JpegIFByteCount) {
+                end = begin + TIFF_POSITION + value;
             }
         }
 
-        return new Blob([dataView.buffer.slice(offset, offset + length)]);
+        return new Blob([dataView.buffer.slice(begin, end)]);
     }
 
     function wrap(action) {
