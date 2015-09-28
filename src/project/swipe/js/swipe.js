@@ -572,14 +572,3 @@ function Swipe(container, options) {
     }
 
 }
-
-
-if (window.jQuery || window.Zepto) {
-    (function ($) {
-        $.fn.Swipe = function (params) {
-            return this.each(function () {
-                $(this).data('Swipe', new Swipe($(this)[0], params));
-            });
-        }
-    })(window.jQuery || window.Zepto)
-}
