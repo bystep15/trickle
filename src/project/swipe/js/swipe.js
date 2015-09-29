@@ -41,9 +41,9 @@ define(function (require, exports, module) {
         that.interval = null;
 
         // setup initial vars
-        var start = {};
-        var delta = {};
-        var isScrolling;
+        that.start = {};
+        that.delta = {};
+        that.isScrolling = undefined;
 
         // setup event capturing
         var events = {
@@ -52,20 +52,20 @@ define(function (require, exports, module) {
 
                 switch (event.type) {
                     case 'touchstart':
-                        this.start(event);
+                        this.startHandler(event);
                         break;
                     case 'touchmove':
-                        this.move(event);
+                        this.moveHandler(event);
                         break;
                     case 'touchend':
-                        offloadFn(this.end(event));
+                        offloadFn(this.endHandler(event));
                         break;
                     case 'webkitTransitionEnd':
                     case 'msTransitionEnd':
                     case 'oTransitionEnd':
                     case 'otransitionend':
                     case 'transitionend':
-                        offloadFn(this.transitionEnd(event));
+                        offloadFn(this.transitionEndHandler(event));
                         break;
                     case 'resize':
                         offloadFn(that.setup);
@@ -75,12 +75,12 @@ define(function (require, exports, module) {
                 if (that.options.stopPropagation) event.stopPropagation();
 
             },
-            start: function (event) {
+            startHandler: function (event) {
 
                 var touches = event.touches[0];
 
                 // measure start values
-                start = {
+                that.start = {
 
                     // get initial touch coords
                     x: touches.pageX,
@@ -92,17 +92,17 @@ define(function (require, exports, module) {
                 };
 
                 // used for testing first move event
-                isScrolling = undefined;
+                that.isScrolling = undefined;
 
                 // reset delta and end measurements
-                delta = {};
+                that.delta = {};
 
                 // attach touchmove and touchend listeners
                 that.element.addEventListener('touchmove', this, false);
                 that.element.addEventListener('touchend', this, false);
 
             },
-            move: function (event) {
+            moveHandler: function (event) {
 
                 // ensure swiping with one touch and not pinching
                 if (event.touches.length > 1 || event.scale && event.scale !== 1) return
@@ -112,18 +112,18 @@ define(function (require, exports, module) {
                 var touches = event.touches[0];
 
                 // measure change in x and y
-                delta = {
-                    x: touches.pageX - start.x,
-                    y: touches.pageY - start.y
+                that.delta = {
+                    x: touches.pageX - that.start.x,
+                    y: touches.pageY - that.start.y
                 }
 
                 // determine if scrolling test has run - one time test
-                if (typeof isScrolling == 'undefined') {
-                    isScrolling = !!( isScrolling || Math.abs(delta.x) < Math.abs(delta.y) );
+                if (typeof that.isScrolling == 'undefined') {
+                    that.isScrolling = !!( that.isScrolling || Math.abs(that.delta.x) < Math.abs(that.delta.y) );
                 }
 
                 // if user is not trying to scroll vertically
-                if (!isScrolling) {
+                if (!that.isScrolling) {
 
                     // prevent native scrolling
                     event.preventDefault();
@@ -134,53 +134,53 @@ define(function (require, exports, module) {
                     // increase resistance if first or last slide
                     if (that.options.continuous) { // we don't add resistance at the end
 
-                        that.translate(that.circle(that.index - 1), delta.x + that.slidePos[that.circle(that.index - 1)], 0);
-                        that.translate(that.index, delta.x + that.slidePos[that.index], 0);
-                        that.translate(that.circle(that.index + 1), delta.x + that.slidePos[that.circle(that.index + 1)], 0);
+                        that.translate(that.circle(that.index - 1), that.delta.x + that.slidePos[that.circle(that.index - 1)], 0);
+                        that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
+                        that.translate(that.circle(that.index + 1), that.delta.x + that.slidePos[that.circle(that.index + 1)], 0);
 
                     } else {
 
-                        delta.x =
-                            delta.x /
-                            ( (!that.index && delta.x > 0               // if first slide and sliding left
+                        that.delta.x =
+                            that.delta.x /
+                            ( (!that.index && that.delta.x > 0               // if first slide and sliding left
                                 || that.index == that.slides.length - 1        // or if last slide and sliding right
-                                && delta.x < 0                       // and if sliding at all
+                                && that.delta.x < 0                       // and if sliding at all
                             ) ?
-                                ( Math.abs(delta.x) / that.width + 1 )      // determine resistance level
+                                ( Math.abs(that.delta.x) / that.width + 1 )      // determine resistance level
                                 : 1 );                                 // no resistance if false
 
                         // translate 1:1
-                        that.translate(that.index - 1, delta.x + that.slidePos[that.index - 1], 0);
-                        that.translate(that.index, delta.x + that.slidePos[that.index], 0);
-                        that.translate(that.index + 1, delta.x + that.slidePos[that.index + 1], 0);
+                        that.translate(that.index - 1, that.delta.x + that.slidePos[that.index - 1], 0);
+                        that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
+                        that.translate(that.index + 1, that.delta.x + that.slidePos[that.index + 1], 0);
                     }
 
                 }
 
             },
-            end: function (event) {
+            endHandler: function (event) {
 
                 // measure duration
-                var duration = +new Date - start.time;
+                var duration = +new Date - that.start.time;
 
                 // determine if slide attempt triggers next/prev slide
                 var isValidSlide =
                     Number(duration) < 250               // if slide duration is less than 250ms
-                    && Math.abs(delta.x) > 20            // and if slide amt is greater than 20px
-                    || Math.abs(delta.x) > that.width / 2;      // or if slide amt is greater than half the width
+                    && Math.abs(that.delta.x) > 20            // and if slide amt is greater than 20px
+                    || Math.abs(that.delta.x) > that.width / 2;      // or if slide amt is greater than half the width
 
                 // determine if slide attempt is past start and end
                 var isPastBounds =
-                    !that.index && delta.x > 0                            // if first slide and slide amt is greater than 0
-                    || that.index == that.slides.length - 1 && delta.x < 0;    // or if last slide and slide amt is less than 0
+                    !that.index && that.delta.x > 0                            // if first slide and slide amt is greater than 0
+                    || that.index == that.slides.length - 1 && that.delta.x < 0;    // or if last slide and slide amt is less than 0
 
                 if (that.options.continuous) isPastBounds = false;
 
                 // determine direction of swipe (true:right, false:left)
-                var direction = delta.x < 0;
+                var direction = that.delta.x < 0;
 
                 // if not scrolling vertically
-                if (!isScrolling) {
+                if (!that.isScrolling) {
 
                     if (isValidSlide && !isPastBounds) {
 
@@ -241,7 +241,7 @@ define(function (require, exports, module) {
                 that.element.removeEventListener('touchend', events, false)
 
             },
-            transitionEnd: function (event) {
+            transitionEndHandler: function (event) {
 
                 if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
 
