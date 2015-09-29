@@ -4,6 +4,15 @@
 define(function (require, exports, module) {
     'use strict';
 
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function (context) {
+            var func = this;
+            return function () {
+                func.apply(context, arguments);
+            };
+        };
+    }
+
     // utilities
     // simple no operation function
     var noop = function () {
@@ -45,216 +54,6 @@ define(function (require, exports, module) {
         that.delta = {};
         that.isScrolling = undefined;
 
-        // setup event capturing
-        var events = {
-
-            handleEvent: function (event) {
-
-                switch (event.type) {
-                    case 'touchstart':
-                        this.startHandler(event);
-                        break;
-                    case 'touchmove':
-                        this.moveHandler(event);
-                        break;
-                    case 'touchend':
-                        offloadFn(this.endHandler(event));
-                        break;
-                    case 'webkitTransitionEnd':
-                    case 'msTransitionEnd':
-                    case 'oTransitionEnd':
-                    case 'otransitionend':
-                    case 'transitionend':
-                        offloadFn(this.transitionEndHandler(event));
-                        break;
-                    case 'resize':
-                        offloadFn(that.setup);
-                        break;
-                }
-
-                if (that.options.stopPropagation) event.stopPropagation();
-
-            },
-            startHandler: function (event) {
-
-                var touches = event.touches[0];
-
-                // measure start values
-                that.start = {
-
-                    // get initial touch coords
-                    x: touches.pageX,
-                    y: touches.pageY,
-
-                    // store time to determine touch duration
-                    time: +new Date
-
-                };
-
-                // used for testing first move event
-                that.isScrolling = undefined;
-
-                // reset delta and end measurements
-                that.delta = {};
-
-                // attach touchmove and touchend listeners
-                that.element.addEventListener('touchmove', this, false);
-                that.element.addEventListener('touchend', this, false);
-
-            },
-            moveHandler: function (event) {
-
-                // ensure swiping with one touch and not pinching
-                if (event.touches.length > 1 || event.scale && event.scale !== 1) return
-
-                if (that.options.disableScroll) event.preventDefault();
-
-                var touches = event.touches[0];
-
-                // measure change in x and y
-                that.delta = {
-                    x: touches.pageX - that.start.x,
-                    y: touches.pageY - that.start.y
-                }
-
-                // determine if scrolling test has run - one time test
-                if (typeof that.isScrolling == 'undefined') {
-                    that.isScrolling = !!( that.isScrolling || Math.abs(that.delta.x) < Math.abs(that.delta.y) );
-                }
-
-                // if user is not trying to scroll vertically
-                if (!that.isScrolling) {
-
-                    // prevent native scrolling
-                    event.preventDefault();
-
-                    // stop slideshow
-                    that.stop();
-
-                    // increase resistance if first or last slide
-                    if (that.options.continuous) { // we don't add resistance at the end
-
-                        that.translate(that.circle(that.index - 1), that.delta.x + that.slidePos[that.circle(that.index - 1)], 0);
-                        that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
-                        that.translate(that.circle(that.index + 1), that.delta.x + that.slidePos[that.circle(that.index + 1)], 0);
-
-                    } else {
-
-                        that.delta.x =
-                            that.delta.x /
-                            ( (!that.index && that.delta.x > 0               // if first slide and sliding left
-                                || that.index == that.slides.length - 1        // or if last slide and sliding right
-                                && that.delta.x < 0                       // and if sliding at all
-                            ) ?
-                                ( Math.abs(that.delta.x) / that.width + 1 )      // determine resistance level
-                                : 1 );                                 // no resistance if false
-
-                        // translate 1:1
-                        that.translate(that.index - 1, that.delta.x + that.slidePos[that.index - 1], 0);
-                        that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
-                        that.translate(that.index + 1, that.delta.x + that.slidePos[that.index + 1], 0);
-                    }
-
-                }
-
-            },
-            endHandler: function (event) {
-
-                // measure duration
-                var duration = +new Date - that.start.time;
-
-                // determine if slide attempt triggers next/prev slide
-                var isValidSlide =
-                    Number(duration) < 250               // if slide duration is less than 250ms
-                    && Math.abs(that.delta.x) > 20            // and if slide amt is greater than 20px
-                    || Math.abs(that.delta.x) > that.width / 2;      // or if slide amt is greater than half the width
-
-                // determine if slide attempt is past start and end
-                var isPastBounds =
-                    !that.index && that.delta.x > 0                            // if first slide and slide amt is greater than 0
-                    || that.index == that.slides.length - 1 && that.delta.x < 0;    // or if last slide and slide amt is less than 0
-
-                if (that.options.continuous) isPastBounds = false;
-
-                // determine direction of swipe (true:right, false:left)
-                var direction = that.delta.x < 0;
-
-                // if not scrolling vertically
-                if (!that.isScrolling) {
-
-                    if (isValidSlide && !isPastBounds) {
-
-                        if (direction) {
-
-                            if (that.options.continuous) { // we need to get the next in this direction in place
-
-                                that.move(that.circle(that.index - 1), -that.width, 0);
-                                that.move(that.circle(that.index + 2), that.width, 0);
-
-                            } else {
-                                that.move(that.index - 1, -that.width, 0);
-                            }
-
-                            that.move(that.index, that.slidePos[that.index] - that.width, that.options.speed);
-                            that.move(that.circle(that.index + 1), that.slidePos[that.circle(that.index + 1)] - that.width, that.options.speed);
-                            that.index = that.circle(that.index + 1);
-
-                        } else {
-                            if (that.options.continuous) { // we need to get the next in this direction in place
-
-                                that.move(that.circle(that.index + 1), that.width, 0);
-                                that.move(that.circle(that.index - 2), -that.width, 0);
-
-                            } else {
-                                that.move(that.index + 1, that.width, 0);
-                            }
-
-                            that.move(that.index, that.slidePos[that.index] + that.width, that.options.speed);
-                            that.move(that.circle(that.index - 1), that.slidePos[that.circle(that.index - 1)] + that.width, that.options.speed);
-                            that.index = that.circle(that.index - 1);
-
-                        }
-
-                        that.options.callback && that.options.callback(that.index, that.slides[that.index]);
-
-                    } else {
-
-                        if (that.options.continuous) {
-
-                            that.move(that.circle(that.index - 1), -that.width, that.options.speed);
-                            that.move(that.index, 0, that.options.speed);
-                            that.move(that.circle(that.index + 1), that.width, that.options.speed);
-
-                        } else {
-
-                            that.move(that.index - 1, -that.width, that.options.speed);
-                            that.move(that.index, 0, that.options.speed);
-                            that.move(that.index + 1, that.width, that.options.speed);
-                        }
-
-                    }
-
-                }
-
-                // kill touchmove and touchend event listeners until touchstart called again
-                that.element.removeEventListener('touchmove', events, false)
-                that.element.removeEventListener('touchend', events, false)
-
-            },
-            transitionEndHandler: function (event) {
-
-                if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
-
-                    if (that.delay) that.begin();
-
-                    that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
-
-                }
-
-            }
-
-        };
-
         // trigger setup
         that.setup();
 
@@ -268,22 +67,24 @@ define(function (require, exports, module) {
         if (browser.addEventListener) {
 
             // set touchstart event on element
-            if (browser.touch) that.element.addEventListener('touchstart', events, false);
+            if (browser.touch) {
+                that.element.addEventListener('touchstart', that, false);
+            }
 
             if (browser.transitions) {
-                that.element.addEventListener('webkitTransitionEnd', events, false);
-                that.element.addEventListener('msTransitionEnd', events, false);
-                that.element.addEventListener('oTransitionEnd', events, false);
-                that.element.addEventListener('otransitionend', events, false);
-                that.element.addEventListener('transitionend', events, false);
+                that.element.addEventListener('webkitTransitionEnd', that, false);
+                that.element.addEventListener('msTransitionEnd', that, false);
+                that.element.addEventListener('oTransitionEnd', that, false);
+                that.element.addEventListener('otransitionend', that, false);
+                that.element.addEventListener('transitionend', that, false);
             }
 
             // set resize event on window
-            window.addEventListener('resize', events, false);
+            window.addEventListener('resize', that, false);
 
         } else {
 
-            window.onresize = that.setup; // to play nice with old IE
+            window.onresize = that.setup.bind(that); // to play nice with old IE
 
         }
 
@@ -357,13 +158,13 @@ define(function (require, exports, module) {
                 if (browser.addEventListener) {
 
                     // remove current event listeners
-                    that.element.removeEventListener('touchstart', events, false);
-                    that.element.removeEventListener('webkitTransitionEnd', events, false);
-                    that.element.removeEventListener('msTransitionEnd', events, false);
-                    that.element.removeEventListener('oTransitionEnd', events, false);
-                    that.element.removeEventListener('otransitionend', events, false);
-                    that.element.removeEventListener('transitionend', events, false);
-                    window.removeEventListener('resize', events, false);
+                    that.element.removeEventListener('touchstart', that, false);
+                    that.element.removeEventListener('webkitTransitionEnd', that, false);
+                    that.element.removeEventListener('msTransitionEnd', that, false);
+                    that.element.removeEventListener('oTransitionEnd', that, false);
+                    that.element.removeEventListener('otransitionend', that, false);
+                    that.element.removeEventListener('transitionend', that, false);
+                    window.removeEventListener('resize', that, false);
 
                 }
                 else {
@@ -501,7 +302,7 @@ define(function (require, exports, module) {
 
                     that.element.style.left = to + 'px';
 
-                    if (delay) begin();
+                    if (that.delay) that.begin();
 
                     that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
 
@@ -609,6 +410,213 @@ define(function (require, exports, module) {
 
             this.delay = 0;
             clearTimeout(this.interval);
+
+        },
+
+        handleEvent: function (event) {
+            var that = this;
+            switch (event.type) {
+                case 'touchstart':
+                    this.startHandler(event);
+                    break;
+                case 'touchmove':
+                    this.moveHandler(event);
+                    break;
+                case 'touchend':
+                    offloadFn(this.endHandler(event));
+                    break;
+                case 'webkitTransitionEnd':
+                case 'msTransitionEnd':
+                case 'oTransitionEnd':
+                case 'otransitionend':
+                case 'transitionend':
+                    offloadFn(this.transitionEndHandler(event));
+                    break;
+                case 'resize':
+                    offloadFn(that.setup);
+                    break;
+            }
+
+            if (that.options.stopPropagation) event.stopPropagation();
+
+        },
+        startHandler: function (event) {
+            var that = this;
+            var touches = event.touches[0];
+
+            // measure start values
+            that.start = {
+
+                // get initial touch coords
+                x: touches.pageX,
+                y: touches.pageY,
+
+                // store time to determine touch duration
+                time: +new Date
+
+            };
+
+            // used for testing first move event
+            that.isScrolling = undefined;
+
+            // reset delta and end measurements
+            that.delta = {};
+
+            // attach touchmove and touchend listeners
+            that.element.addEventListener('touchmove', this, false);
+            that.element.addEventListener('touchend', this, false);
+
+        },
+        moveHandler: function (event) {
+            var that = this;
+            // ensure swiping with one touch and not pinching
+            if (event.touches.length > 1 || event.scale && event.scale !== 1) return
+
+            if (that.options.disableScroll) event.preventDefault();
+
+            var touches = event.touches[0];
+
+            // measure change in x and y
+            that.delta = {
+                x: touches.pageX - that.start.x,
+                y: touches.pageY - that.start.y
+            }
+
+            // determine if scrolling test has run - one time test
+            if (typeof that.isScrolling == 'undefined') {
+                that.isScrolling = !!( that.isScrolling || Math.abs(that.delta.x) < Math.abs(that.delta.y) );
+            }
+
+            // if user is not trying to scroll vertically
+            if (!that.isScrolling) {
+
+                // prevent native scrolling
+                event.preventDefault();
+
+                // stop slideshow
+                that.stop();
+
+                // increase resistance if first or last slide
+                if (that.options.continuous) { // we don't add resistance at the end
+
+                    that.translate(that.circle(that.index - 1), that.delta.x + that.slidePos[that.circle(that.index - 1)], 0);
+                    that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
+                    that.translate(that.circle(that.index + 1), that.delta.x + that.slidePos[that.circle(that.index + 1)], 0);
+
+                } else {
+
+                    that.delta.x =
+                        that.delta.x /
+                        ( (!that.index && that.delta.x > 0               // if first slide and sliding left
+                            || that.index == that.slides.length - 1        // or if last slide and sliding right
+                            && that.delta.x < 0                       // and if sliding at all
+                        ) ?
+                            ( Math.abs(that.delta.x) / that.width + 1 )      // determine resistance level
+                            : 1 );                                 // no resistance if false
+
+                    // translate 1:1
+                    that.translate(that.index - 1, that.delta.x + that.slidePos[that.index - 1], 0);
+                    that.translate(that.index, that.delta.x + that.slidePos[that.index], 0);
+                    that.translate(that.index + 1, that.delta.x + that.slidePos[that.index + 1], 0);
+                }
+
+            }
+
+        },
+        endHandler: function (event) {
+            var that = this;
+
+            // measure duration
+            var duration = +new Date - that.start.time;
+
+            // determine if slide attempt triggers next/prev slide
+            var isValidSlide =
+                Number(duration) < 250               // if slide duration is less than 250ms
+                && Math.abs(that.delta.x) > 20            // and if slide amt is greater than 20px
+                || Math.abs(that.delta.x) > that.width / 2;      // or if slide amt is greater than half the width
+
+            // determine if slide attempt is past start and end
+            var isPastBounds =
+                !that.index && that.delta.x > 0                            // if first slide and slide amt is greater than 0
+                || that.index == that.slides.length - 1 && that.delta.x < 0;    // or if last slide and slide amt is less than 0
+
+            if (that.options.continuous) isPastBounds = false;
+
+            // determine direction of swipe (true:right, false:left)
+            var direction = that.delta.x < 0;
+
+            // if not scrolling vertically
+            if (!that.isScrolling) {
+
+                if (isValidSlide && !isPastBounds) {
+
+                    if (direction) {
+
+                        if (that.options.continuous) { // we need to get the next in this direction in place
+
+                            that.move(that.circle(that.index - 1), -that.width, 0);
+                            that.move(that.circle(that.index + 2), that.width, 0);
+
+                        } else {
+                            that.move(that.index - 1, -that.width, 0);
+                        }
+
+                        that.move(that.index, that.slidePos[that.index] - that.width, that.options.speed);
+                        that.move(that.circle(that.index + 1), that.slidePos[that.circle(that.index + 1)] - that.width, that.options.speed);
+                        that.index = that.circle(that.index + 1);
+
+                    } else {
+                        if (that.options.continuous) { // we need to get the next in this direction in place
+
+                            that.move(that.circle(that.index + 1), that.width, 0);
+                            that.move(that.circle(that.index - 2), -that.width, 0);
+
+                        } else {
+                            that.move(that.index + 1, that.width, 0);
+                        }
+
+                        that.move(that.index, that.slidePos[that.index] + that.width, that.options.speed);
+                        that.move(that.circle(that.index - 1), that.slidePos[that.circle(that.index - 1)] + that.width, that.options.speed);
+                        that.index = that.circle(that.index - 1);
+
+                    }
+
+                    that.options.callback && that.options.callback(that.index, that.slides[that.index]);
+
+                } else {
+
+                    if (that.options.continuous) {
+
+                        that.move(that.circle(that.index - 1), -that.width, that.options.speed);
+                        that.move(that.index, 0, that.options.speed);
+                        that.move(that.circle(that.index + 1), that.width, that.options.speed);
+
+                    } else {
+
+                        that.move(that.index - 1, -that.width, that.options.speed);
+                        that.move(that.index, 0, that.options.speed);
+                        that.move(that.index + 1, that.width, that.options.speed);
+                    }
+
+                }
+
+            }
+
+            // kill touchmove and touchend event listeners until touchstart called again
+            that.element.removeEventListener('touchmove', that, false);
+            that.element.removeEventListener('touchend', that, false);
+
+        },
+        transitionEndHandler: function (event) {
+            var that = this;
+
+            if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
+
+                if (that.delay) that.begin();
+
+                that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
+
+            }
 
         }
     };
