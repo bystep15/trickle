@@ -23,4 +23,6 @@ define(function (require) {
     btnNext.addEventListener('click', function (e) {
         swipe.next();
     }, false);
+
+    window.swipe = swipe;
 });
