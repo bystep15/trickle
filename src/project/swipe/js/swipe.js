@@ -90,27 +90,13 @@ define(function (require, exports, module) {
 
         }
 
-        function prev() {
-
-            if (that.options.continuous) that.slide(that.index - 1);
-            else if (that.index) that.slide(that.index - 1);
-
-        }
-
-        function next() {
-
-            if (that.options.continuous) that.slide(that.index + 1);
-            else if (that.index < that.slides.length - 1) that.slide(that.index + 1);
-
-        }
-
         // setup auto slideshow
         var delay = that.options.auto || 0;
         var interval;
 
         function begin() {
 
-            interval = setTimeout(next, delay);
+            interval = setTimeout(that.next.bind(that), delay);
 
         }
 
@@ -384,7 +370,7 @@ define(function (require, exports, module) {
                 // cancel slideshow
                 stop();
 
-                prev();
+                that.prev();
 
             },
             next: function () {
@@ -392,7 +378,7 @@ define(function (require, exports, module) {
                 // cancel slideshow
                 stop();
 
-                next();
+                that.next();
 
             },
             stop: function () {
@@ -605,6 +591,22 @@ define(function (require, exports, module) {
             if (options.callback) {
                 offloadFn(options.callback(index, that.slides[index]));
             }
+        },
+
+        prev: function () {
+
+            if (this.options.continuous || this.index) {
+                this.slide(this.index - 1);
+            }
+
+        },
+
+        next: function () {
+
+            if (this.options.continuous || this.index < (this.slides.length - 1)) {
+                this.slide(this.index + 1);
+            }
+
         }
     };
 
