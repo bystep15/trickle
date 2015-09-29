@@ -562,6 +562,12 @@ define(function (require, exports, module) {
             return (length + (index % length)) % length;
         },
 
+        /**
+         * 用CSS 3中的Transform相关属性实现移动
+         * @param index
+         * @param dist
+         * @param speed
+         */
         translate: function (index, dist, speed) {
 
             var slide = this.slides[index];
