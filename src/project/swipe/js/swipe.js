@@ -92,63 +92,17 @@ define(function (require, exports, module) {
 
         function prev() {
 
-            if (that.options.continuous) slide(that.index - 1);
-            else if (that.index) slide(that.index - 1);
+            if (that.options.continuous) that.slide(that.index - 1);
+            else if (that.index) that.slide(that.index - 1);
 
         }
 
         function next() {
 
-            if (that.options.continuous) slide(that.index + 1);
-            else if (that.index < that.slides.length - 1) slide(that.index + 1);
+            if (that.options.continuous) that.slide(that.index + 1);
+            else if (that.index < that.slides.length - 1) that.slide(that.index + 1);
 
         }
-
-
-        function slide(to, slideSpeed) {
-
-            // do nothing if already on requested slide
-            if (that.index == to) return;
-
-            if (browser.transitions) {
-
-                var direction = Math.abs(that.index - to) / (that.index - to); // 1: backward, -1: forward
-
-                // get the actual position of the slide
-                if (that.options.continuous) {
-                    var natural_direction = direction;
-                    direction = -that.slidePos[that.circle(to)] / that.width;
-
-                    // if going forward but to < index, use to = slides.length + to
-                    // if going backward but to > index, use to = -slides.length + to
-                    if (direction !== natural_direction) to = -direction * that.slides.length + to;
-
-                }
-
-                var diff = Math.abs(that.index - to) - 1;
-
-                // move all the slides between index and to in the right direction
-                while (diff--) that.move(that.circle((to > that.index ? to : that.index) - diff - 1), that.width * direction, 0);
-
-                to = that.circle(to);
-
-                that.move(that.index, that.width * direction, slideSpeed || that.options.speed);
-                that.move(to, 0, slideSpeed || that.options.speed);
-
-                if (that.options.continuous) that.move(that.circle(to - direction), -(that.width * direction), 0); // we need to get the next in place
-
-            } else {
-
-                to = that.circle(to);
-                that.animate(that.index * -that.width, to * -that.width, slideSpeed || that.options.speed);
-                //no fallback for a circular continuous if the browser does not accept transitions
-            }
-
-            that.index = to;
-            offloadFn(that.options.callback && that.options.callback(that.index, that.slides[that.index]));
-        }
-
-
 
         // setup auto slideshow
         var delay = that.options.auto || 0;
@@ -422,7 +376,7 @@ define(function (require, exports, module) {
                 // cancel slideshow
                 stop();
 
-                slide(to, speed);
+                that.slide(to, speed);
 
             },
             prev: function () {
@@ -591,6 +545,66 @@ define(function (require, exports, module) {
             this.translate(index, dist, speed);
             this.slidePos[index] = dist;
 
+        },
+
+        slide: function (to, slideSpeed) {
+            var that = this;
+            // do nothing if already on requested slide
+            var index = this.index;
+
+            if (index == to) {
+                return;
+            }
+
+            var width = this.width;
+
+            var options = that.options;
+
+            if (browser.transitions) {
+
+                var direction = Math.abs(index - to) / (index - to); // 1: backward, -1: forward
+
+                // get the actual position of the slide
+                if (options.continuous) {
+                    var natural_direction = direction;
+                    direction = -that.slidePos[that.circle(to)] / width;
+
+                    // if going forward but to < index, use to = slides.length + to
+                    // if going backward but to > index, use to = -slides.length + to
+                    if (direction !== natural_direction) {
+                        to = -direction * that.slides.length + to;
+                    }
+
+                }
+
+                var diff = Math.abs(index - to) - 1;
+
+                // move all the slides between index and to in the right direction
+                while (diff--) {
+                    that.move(that.circle((to > index ? to : index) - diff - 1), width * direction, 0);
+                }
+
+                to = that.circle(to);
+
+                that.move(index, width * direction, slideSpeed || options.speed);
+                that.move(to, 0, slideSpeed || options.speed);
+
+                if (options.continuous) {
+                    // we need to get the next in place
+                    that.move(that.circle(to - direction), -(width * direction), 0);
+                }
+
+            } else {
+
+                to = that.circle(to);
+                that.animate(index * -width, to * -width, slideSpeed || options.speed);
+                //no fallback for a circular continuous if the browser does not accept transitions
+            }
+
+            that.index = to;
+            if (options.callback) {
+                offloadFn(options.callback(index, that.slides[index]));
+            }
         }
     };
 
