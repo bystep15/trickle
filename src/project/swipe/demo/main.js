@@ -6,7 +6,7 @@ define(function (require) {
         btnNext = document.getElementById('btn-next'),
         swipe;
 
-    swipe = Swipe(document.getElementById('mySwipe'), {
+    swipe = new Swipe(document.getElementById('mySwipe'), {
         // startSlide: 4,
         // auto: 3000,
         // continuous: true,
