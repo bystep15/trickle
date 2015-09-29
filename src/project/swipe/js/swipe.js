@@ -150,28 +150,8 @@ define(function (require, exports, module) {
 
         function move(index, dist, speed) {
 
-            translate(index, dist, speed);
+            that.translate(index, dist, speed);
             that.slidePos[index] = dist;
-
-        }
-
-        function translate(index, dist, speed) {
-
-            var slide = that.slides[index];
-            var style = slide && slide.style;
-
-            if (!style) return;
-
-            style.webkitTransitionDuration =
-                style.MozTransitionDuration =
-                    style.msTransitionDuration =
-                        style.OTransitionDuration =
-                            style.transitionDuration = speed + 'ms';
-
-            style.webkitTransform = 'translate(' + dist + 'px,0)' + 'translateZ(0)';
-            style.msTransform =
-                style.MozTransform =
-                    style.OTransform = 'translateX(' + dist + 'px)';
 
         }
 
@@ -322,9 +302,9 @@ define(function (require, exports, module) {
                     // increase resistance if first or last slide
                     if (that.options.continuous) { // we don't add resistance at the end
 
-                        translate(that.circle(that.index - 1), delta.x + that.slidePos[that.circle(that.index - 1)], 0);
-                        translate(that.index, delta.x + that.slidePos[that.index], 0);
-                        translate(that.circle(that.index + 1), delta.x + that.slidePos[that.circle(that.index + 1)], 0);
+                        that.translate(that.circle(that.index - 1), delta.x + that.slidePos[that.circle(that.index - 1)], 0);
+                        that.translate(that.index, delta.x + that.slidePos[that.index], 0);
+                        that.translate(that.circle(that.index + 1), delta.x + that.slidePos[that.circle(that.index + 1)], 0);
 
                     } else {
 
@@ -338,9 +318,9 @@ define(function (require, exports, module) {
                                 : 1 );                                 // no resistance if false
 
                         // translate 1:1
-                        translate(that.index - 1, delta.x + that.slidePos[that.index - 1], 0);
-                        translate(that.index, delta.x + that.slidePos[that.index], 0);
-                        translate(that.index + 1, delta.x + that.slidePos[that.index + 1], 0);
+                        that.translate(that.index - 1, delta.x + that.slidePos[that.index - 1], 0);
+                        that.translate(that.index, delta.x + that.slidePos[that.index], 0);
+                        that.translate(that.index + 1, delta.x + that.slidePos[that.index + 1], 0);
                     }
 
                 }
@@ -535,7 +515,7 @@ define(function (require, exports, module) {
                     slide.style.width = '';
                     slide.style.left = '';
 
-                    if (browser.transitions) translate(pos, 0, 0);
+                    if (browser.transitions) that.translate(pos, 0, 0);
 
                 }
 
@@ -580,6 +560,28 @@ define(function (require, exports, module) {
         circle: function (index) {
             var length = this.slides.length;
             return (length + (index % length)) % length;
+        },
+
+        translate: function (index, dist, speed) {
+
+            var slide = this.slides[index];
+            var style = slide && slide.style;
+
+            if (!style) {
+                return;
+            }
+
+            style.webkitTransitionDuration =
+                style.MozTransitionDuration =
+                    style.msTransitionDuration =
+                        style.OTransitionDuration =
+                            style.transitionDuration = speed + 'ms';
+
+            style.webkitTransform = 'translate(' + dist + 'px,0)' + 'translateZ(0)';
+            style.msTransform =
+                style.MozTransform =
+                    style.OTransform = 'translateX(' + dist + 'px)';
+
         }
     };
 
