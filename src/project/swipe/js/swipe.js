@@ -36,7 +36,7 @@ define(function (require, exports, module) {
         this.container = container;
         this.element = this.container.children[0];
         this.options = this.defaults(options);
-        this.index = options.startSlide;
+        this.index = this.options.startSlide;
 
         function setup() {
 
@@ -80,8 +80,8 @@ define(function (require, exports, module) {
 
             // reposition elements before and after index
             if (that.options.continuous && browser.transitions) {
-                move(circle(that.index - 1), -that.width, 0);
-                move(circle(that.index + 1), that.width, 0);
+                move(that.circle(that.index - 1), -that.width, 0);
+                move(that.circle(that.index + 1), that.width, 0);
             }
 
             if (!browser.transitions) that.element.style.left = (that.index * -that.width) + 'px';
@@ -104,12 +104,6 @@ define(function (require, exports, module) {
 
         }
 
-        function circle(index) {
-
-            // a simple positive modulo using slides.length
-            return (that.slides.length + (index % that.slides.length)) % that.slides.length;
-
-        }
 
         function slide(to, slideSpeed) {
 
@@ -123,7 +117,7 @@ define(function (require, exports, module) {
                 // get the actual position of the slide
                 if (that.options.continuous) {
                     var natural_direction = direction;
-                    direction = -that.slidePos[circle(to)] / that.width;
+                    direction = -that.slidePos[that.circle(to)] / that.width;
 
                     // if going forward but to < index, use to = slides.length + to
                     // if going backward but to > index, use to = -slides.length + to
@@ -134,18 +128,18 @@ define(function (require, exports, module) {
                 var diff = Math.abs(that.index - to) - 1;
 
                 // move all the slides between index and to in the right direction
-                while (diff--) move(circle((to > that.index ? to : that.index) - diff - 1), that.width * direction, 0);
+                while (diff--) move(that.circle((to > that.index ? to : that.index) - diff - 1), that.width * direction, 0);
 
-                to = circle(to);
+                to = that.circle(to);
 
                 move(that.index, that.width * direction, slideSpeed || that.options.speed);
                 move(to, 0, slideSpeed || that.options.speed);
 
-                if (that.options.continuous) move(circle(to - direction), -(that.width * direction), 0); // we need to get the next in place
+                if (that.options.continuous) move(that.circle(to - direction), -(that.width * direction), 0); // we need to get the next in place
 
             } else {
 
-                to = circle(to);
+                to = that.circle(to);
                 animate(that.index * -that.width, to * -that.width, slideSpeed || that.options.speed);
                 //no fallback for a circular continuous if the browser does not accept transitions
             }
@@ -328,9 +322,9 @@ define(function (require, exports, module) {
                     // increase resistance if first or last slide
                     if (that.options.continuous) { // we don't add resistance at the end
 
-                        translate(circle(that.index - 1), delta.x + that.slidePos[circle(that.index - 1)], 0);
+                        translate(that.circle(that.index - 1), delta.x + that.slidePos[that.circle(that.index - 1)], 0);
                         translate(that.index, delta.x + that.slidePos[that.index], 0);
-                        translate(circle(that.index + 1), delta.x + that.slidePos[circle(that.index + 1)], 0);
+                        translate(that.circle(that.index + 1), delta.x + that.slidePos[that.circle(that.index + 1)], 0);
 
                     } else {
 
@@ -382,30 +376,30 @@ define(function (require, exports, module) {
 
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(circle(that.index - 1), -that.width, 0);
-                                move(circle(that.index + 2), that.width, 0);
+                                move(that.circle(that.index - 1), -that.width, 0);
+                                move(that.circle(that.index + 2), that.width, 0);
 
                             } else {
                                 move(that.index - 1, -that.width, 0);
                             }
 
                             move(that.index, that.slidePos[that.index] - that.width, that.options.speed);
-                            move(circle(that.index + 1), that.slidePos[circle(that.index + 1)] - that.width, that.options.speed);
-                            that.index = circle(that.index + 1);
+                            move(that.circle(that.index + 1), that.slidePos[that.circle(that.index + 1)] - that.width, that.options.speed);
+                            that.index = that.circle(that.index + 1);
 
                         } else {
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(circle(that.index + 1), that.width, 0);
-                                move(circle(that.index - 2), -that.width, 0);
+                                move(that.circle(that.index + 1), that.width, 0);
+                                move(that.circle(that.index - 2), -that.width, 0);
 
                             } else {
                                 move(that.index + 1, that.width, 0);
                             }
 
                             move(that.index, that.slidePos[that.index] + that.width, that.options.speed);
-                            move(circle(that.index - 1), that.slidePos[circle(that.index - 1)] + that.width, that.options.speed);
-                            that.index = circle(that.index - 1);
+                            move(that.circle(that.index - 1), that.slidePos[that.circle(that.index - 1)] + that.width, that.options.speed);
+                            that.index = that.circle(that.index - 1);
 
                         }
 
@@ -415,9 +409,9 @@ define(function (require, exports, module) {
 
                         if (that.options.continuous) {
 
-                            move(circle(that.index - 1), -that.width, that.options.speed);
+                            move(that.circle(that.index - 1), -that.width, that.options.speed);
                             move(that.index, 0, that.options.speed);
-                            move(circle(that.index + 1), that.width, that.options.speed);
+                            move(that.circle(that.index + 1), that.width, that.options.speed);
 
                         } else {
 
@@ -578,6 +572,14 @@ define(function (require, exports, module) {
             options.speed = options.speed || 300;
             options.continuous = options.continuous || true;
             return options;
+        },
+
+        /**
+         * a simple positive modulo using slides.length
+         */
+        circle: function (index) {
+            var length = this.slides.length;
+            return (length + (index % length)) % length;
         }
     };
 
