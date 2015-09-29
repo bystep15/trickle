@@ -37,21 +37,20 @@ define(function (require, exports, module) {
         this.element = this.container.children[0];
         this.options = this.defaults(options);
         this.index = this.options.startSlide;
-
         // setup auto slideshow
-        var delay = that.options.auto || 0;
-        var interval;
+        that.delay = this.options.auto;
+        that.interval = null;
 
         function begin() {
 
-            interval = setTimeout(that.next.bind(that), delay);
+            that.interval = setTimeout(that.next.bind(that), that.delay);
 
         }
 
         function stop() {
 
-            delay = 0;
-            clearTimeout(interval);
+            that.delay = 0;
+            clearTimeout(that.interval);
 
         }
 
@@ -261,7 +260,7 @@ define(function (require, exports, module) {
 
                 if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
 
-                    if (delay) begin();
+                    if (that.delay) begin();
 
                     that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
 
@@ -275,7 +274,7 @@ define(function (require, exports, module) {
         that.setup();
 
         // start auto slideshow if applicable
-        if (delay) begin();
+        if (that.delay) begin();
 
 
         // add event listeners
@@ -399,6 +398,7 @@ define(function (require, exports, module) {
             options.startSlide = parseInt(options.startSlide, 10) || 0;
             options.speed = options.speed || 300;
             options.continuous = options.continuous || true;
+            options.auto = options.auto || 0;
             return options;
         },
 
