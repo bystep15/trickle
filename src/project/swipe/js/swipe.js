@@ -87,95 +87,6 @@ define(function (require, exports, module) {
             window.onresize = that.setup.bind(that); // to play nice with old IE
 
         }
-
-        // expose the Swipe API
-        return {
-            setup: that.setup,
-
-            slide: function (to, speed) {
-
-                // cancel slideshow
-                that.stop();
-
-                that.slide(to, speed);
-
-            },
-            prev: function () {
-
-                // cancel slideshow
-                that.stop();
-
-                that.prev();
-
-            },
-            next: function () {
-
-                // cancel slideshow
-                that.stop();
-
-                that.next();
-
-            },
-            stop: function () {
-
-                // cancel slideshow
-                that.stop();
-
-            },
-            getPos: function () {
-
-                // return current index position
-                return that.index;
-
-            },
-            getNumSlides: function () {
-
-                // return total number of slides
-                return that.length;
-            },
-            kill: function () {
-
-                // cancel slideshow
-                that.stop();
-
-                // reset element
-                that.element.style.width = '';
-                that.element.style.left = '';
-
-                // reset slides
-                var pos = that.slides.length;
-                while (pos--) {
-
-                    var slide = that.slides[pos];
-                    slide.style.width = '';
-                    slide.style.left = '';
-
-                    if (browser.transitions) that.translate(pos, 0, 0);
-
-                }
-
-                // removed event listeners
-                if (browser.addEventListener) {
-
-                    // remove current event listeners
-                    that.element.removeEventListener('touchstart', that, false);
-                    that.element.removeEventListener('webkitTransitionEnd', that, false);
-                    that.element.removeEventListener('msTransitionEnd', that, false);
-                    that.element.removeEventListener('oTransitionEnd', that, false);
-                    that.element.removeEventListener('otransitionend', that, false);
-                    that.element.removeEventListener('transitionend', that, false);
-                    window.removeEventListener('resize', that, false);
-
-                }
-                else {
-
-                    window.onresize = null;
-
-                }
-
-            }
-        }
-
     }
 
     Swipe.prototype = {
@@ -325,6 +236,8 @@ define(function (require, exports, module) {
         },
 
         slide: function (to, slideSpeed) {
+            // cancel slideshow
+            this.stop();
             var that = this;
             // do nothing if already on requested slide
             var index = this.index;
@@ -385,7 +298,8 @@ define(function (require, exports, module) {
         },
 
         prev: function () {
-
+            // cancel slideshow
+            this.stop();
             if (this.options.continuous || this.index) {
                 this.slide(this.index - 1);
             }
@@ -393,7 +307,8 @@ define(function (require, exports, module) {
         },
 
         next: function () {
-
+            // cancel slideshow
+            this.stop();
             if (this.options.continuous || this.index < (this.slides.length - 1)) {
                 this.slide(this.index + 1);
             }
@@ -410,6 +325,59 @@ define(function (require, exports, module) {
 
             this.delay = 0;
             clearTimeout(this.interval);
+
+        },
+
+        getPos: function () {
+
+            // return current index position
+            return that.index;
+
+        },
+        getNumSlides: function () {
+
+            // return total number of slides
+            return that.length;
+        },
+        kill: function () {
+
+            // cancel slideshow
+            that.stop();
+
+            // reset element
+            that.element.style.width = '';
+            that.element.style.left = '';
+
+            // reset slides
+            var pos = that.slides.length;
+            while (pos--) {
+
+                var slide = that.slides[pos];
+                slide.style.width = '';
+                slide.style.left = '';
+
+                if (browser.transitions) that.translate(pos, 0, 0);
+
+            }
+
+            // removed event listeners
+            if (browser.addEventListener) {
+
+                // remove current event listeners
+                that.element.removeEventListener('touchstart', that, false);
+                that.element.removeEventListener('webkitTransitionEnd', that, false);
+                that.element.removeEventListener('msTransitionEnd', that, false);
+                that.element.removeEventListener('oTransitionEnd', that, false);
+                that.element.removeEventListener('otransitionend', that, false);
+                that.element.removeEventListener('transitionend', that, false);
+                window.removeEventListener('resize', that, false);
+
+            }
+            else {
+
+                window.onresize = null;
+
+            }
 
         },
 
