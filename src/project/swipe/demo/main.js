@@ -7,8 +7,8 @@ define(function (require) {
         swipe;
 
     swipe = new Swipe(document.getElementById('mySwipe'), {
-        // startSlide: 4,
-        // auto: 3000,
+        startSlide: 4,
+        auto: 3000,
         // continuous: true,
         // disableScroll: true,
         // stopPropagation: true,
