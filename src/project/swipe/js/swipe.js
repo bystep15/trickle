@@ -36,7 +36,7 @@ define(function (require, exports, module) {
         this.container = container;
         this.element = this.container.children[0];
         this.options = this.defaults(options);
-        var index = options.startSlide;
+        this.index = options.startSlide;
 
         var slides, slidePos, width, length;
 
@@ -75,18 +75,18 @@ define(function (require, exports, module) {
 
                 if (browser.transitions) {
                     slide.style.left = (pos * -width) + 'px';
-                    move(pos, index > pos ? -width : (index < pos ? width : 0), 0);
+                    move(pos, that.index > pos ? -width : (that.index < pos ? width : 0), 0);
                 }
 
             }
 
             // reposition elements before and after index
             if (that.options.continuous && browser.transitions) {
-                move(circle(index - 1), -width, 0);
-                move(circle(index + 1), width, 0);
+                move(circle(that.index - 1), -width, 0);
+                move(circle(that.index + 1), width, 0);
             }
 
-            if (!browser.transitions) that.element.style.left = (index * -width) + 'px';
+            if (!browser.transitions) that.element.style.left = (that.index * -width) + 'px';
 
             that.container.style.visibility = 'visible';
 
@@ -94,15 +94,15 @@ define(function (require, exports, module) {
 
         function prev() {
 
-            if (that.options.continuous) slide(index - 1);
-            else if (index) slide(index - 1);
+            if (that.options.continuous) slide(that.index - 1);
+            else if (that.index) slide(that.index - 1);
 
         }
 
         function next() {
 
-            if (that.options.continuous) slide(index + 1);
-            else if (index < slides.length - 1) slide(index + 1);
+            if (that.options.continuous) slide(that.index + 1);
+            else if (that.index < slides.length - 1) slide(that.index + 1);
 
         }
 
@@ -116,11 +116,11 @@ define(function (require, exports, module) {
         function slide(to, slideSpeed) {
 
             // do nothing if already on requested slide
-            if (index == to) return;
+            if (that.index == to) return;
 
             if (browser.transitions) {
 
-                var direction = Math.abs(index - to) / (index - to); // 1: backward, -1: forward
+                var direction = Math.abs(that.index - to) / (that.index - to); // 1: backward, -1: forward
 
                 // get the actual position of the slide
                 if (that.options.continuous) {
@@ -133,14 +133,14 @@ define(function (require, exports, module) {
 
                 }
 
-                var diff = Math.abs(index - to) - 1;
+                var diff = Math.abs(that.index - to) - 1;
 
                 // move all the slides between index and to in the right direction
-                while (diff--) move(circle((to > index ? to : index) - diff - 1), width * direction, 0);
+                while (diff--) move(circle((to > that.index ? to : that.index) - diff - 1), width * direction, 0);
 
                 to = circle(to);
 
-                move(index, width * direction, slideSpeed || that.options.speed);
+                move(that.index, width * direction, slideSpeed || that.options.speed);
                 move(to, 0, slideSpeed || that.options.speed);
 
                 if (that.options.continuous) move(circle(to - direction), -(width * direction), 0); // we need to get the next in place
@@ -148,12 +148,12 @@ define(function (require, exports, module) {
             } else {
 
                 to = circle(to);
-                animate(index * -width, to * -width, slideSpeed || that.options.speed);
+                animate(that.index * -width, to * -width, slideSpeed || that.options.speed);
                 //no fallback for a circular continuous if the browser does not accept transitions
             }
 
-            index = to;
-            offloadFn(that.options.callback && that.options.callback(index, slides[index]));
+            that.index = to;
+            offloadFn(that.options.callback && that.options.callback(that.index, slides[that.index]));
         }
 
         function move(index, dist, speed) {
@@ -205,7 +205,7 @@ define(function (require, exports, module) {
 
                     if (delay) begin();
 
-                    that.options.transitionEnd && that.options.transitionEnd.call(event, index, slides[index]);
+                    that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, slides[that.index]);
 
                     clearInterval(timer);
                     return;
@@ -330,25 +330,25 @@ define(function (require, exports, module) {
                     // increase resistance if first or last slide
                     if (that.options.continuous) { // we don't add resistance at the end
 
-                        translate(circle(index - 1), delta.x + slidePos[circle(index - 1)], 0);
-                        translate(index, delta.x + slidePos[index], 0);
-                        translate(circle(index + 1), delta.x + slidePos[circle(index + 1)], 0);
+                        translate(circle(that.index - 1), delta.x + slidePos[circle(that.index - 1)], 0);
+                        translate(that.index, delta.x + slidePos[that.index], 0);
+                        translate(circle(that.index + 1), delta.x + slidePos[circle(that.index + 1)], 0);
 
                     } else {
 
                         delta.x =
                             delta.x /
-                            ( (!index && delta.x > 0               // if first slide and sliding left
-                                || index == slides.length - 1        // or if last slide and sliding right
+                            ( (!that.index && delta.x > 0               // if first slide and sliding left
+                                || that.index == slides.length - 1        // or if last slide and sliding right
                                 && delta.x < 0                       // and if sliding at all
                             ) ?
                                 ( Math.abs(delta.x) / width + 1 )      // determine resistance level
                                 : 1 );                                 // no resistance if false
 
                         // translate 1:1
-                        translate(index - 1, delta.x + slidePos[index - 1], 0);
-                        translate(index, delta.x + slidePos[index], 0);
-                        translate(index + 1, delta.x + slidePos[index + 1], 0);
+                        translate(that.index - 1, delta.x + slidePos[that.index - 1], 0);
+                        translate(that.index, delta.x + slidePos[that.index], 0);
+                        translate(that.index + 1, delta.x + slidePos[that.index + 1], 0);
                     }
 
                 }
@@ -367,8 +367,8 @@ define(function (require, exports, module) {
 
                 // determine if slide attempt is past start and end
                 var isPastBounds =
-                    !index && delta.x > 0                            // if first slide and slide amt is greater than 0
-                    || index == slides.length - 1 && delta.x < 0;    // or if last slide and slide amt is less than 0
+                    !that.index && delta.x > 0                            // if first slide and slide amt is greater than 0
+                    || that.index == slides.length - 1 && delta.x < 0;    // or if last slide and slide amt is less than 0
 
                 if (that.options.continuous) isPastBounds = false;
 
@@ -384,48 +384,48 @@ define(function (require, exports, module) {
 
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(circle(index - 1), -width, 0);
-                                move(circle(index + 2), width, 0);
+                                move(circle(that.index - 1), -width, 0);
+                                move(circle(that.index + 2), width, 0);
 
                             } else {
-                                move(index - 1, -width, 0);
+                                move(that.index - 1, -width, 0);
                             }
 
-                            move(index, slidePos[index] - width, that.options.speed);
-                            move(circle(index + 1), slidePos[circle(index + 1)] - width, that.options.speed);
-                            index = circle(index + 1);
+                            move(that.index, slidePos[that.index] - width, that.options.speed);
+                            move(circle(that.index + 1), slidePos[circle(that.index + 1)] - width, that.options.speed);
+                            that.index = circle(that.index + 1);
 
                         } else {
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(circle(index + 1), width, 0);
-                                move(circle(index - 2), -width, 0);
+                                move(circle(that.index + 1), width, 0);
+                                move(circle(that.index - 2), -width, 0);
 
                             } else {
-                                move(index + 1, width, 0);
+                                move(that.index + 1, width, 0);
                             }
 
-                            move(index, slidePos[index] + width, that.options.speed);
-                            move(circle(index - 1), slidePos[circle(index - 1)] + width, that.options.speed);
-                            index = circle(index - 1);
+                            move(that.index, slidePos[that.index] + width, that.options.speed);
+                            move(circle(that.index - 1), slidePos[circle(that.index - 1)] + width, that.options.speed);
+                            that.index = circle(that.index - 1);
 
                         }
 
-                        that.options.callback && that.options.callback(index, slides[index]);
+                        that.options.callback && that.options.callback(that.index, slides[that.index]);
 
                     } else {
 
                         if (that.options.continuous) {
 
-                            move(circle(index - 1), -width, that.options.speed);
-                            move(index, 0, that.options.speed);
-                            move(circle(index + 1), width, that.options.speed);
+                            move(circle(that.index - 1), -width, that.options.speed);
+                            move(that.index, 0, that.options.speed);
+                            move(circle(that.index + 1), width, that.options.speed);
 
                         } else {
 
-                            move(index - 1, -width, that.options.speed);
-                            move(index, 0, that.options.speed);
-                            move(index + 1, width, that.options.speed);
+                            move(that.index - 1, -width, that.options.speed);
+                            move(that.index, 0, that.options.speed);
+                            move(that.index + 1, width, that.options.speed);
                         }
 
                     }
@@ -439,11 +439,11 @@ define(function (require, exports, module) {
             },
             transitionEnd: function (event) {
 
-                if (parseInt(event.target.getAttribute('data-index'), 10) == index) {
+                if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
 
                     if (delay) begin();
 
-                    that.options.transitionEnd && that.options.transitionEnd.call(event, index, slides[index]);
+                    that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, slides[that.index]);
 
                 }
 
@@ -520,7 +520,7 @@ define(function (require, exports, module) {
             getPos: function () {
 
                 // return current index position
-                return index;
+                return that.index;
 
             },
             getNumSlides: function () {
