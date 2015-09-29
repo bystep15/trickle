@@ -1,5 +1,25 @@
 define(function (require, exports, module) {
     'use strict';
+
+    // utilities
+    // simple no operation function
+    var noop = function () {
+    };
+    // offload a functions execution
+    var offloadFn = function (fn) {
+        setTimeout(fn || noop, 0)
+    };
+    // check browser capabilities
+    var browser = {
+        addEventListener: !!window.addEventListener,
+        touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+        transitions: (function (temp) {
+            var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'];
+            for (var i in props) if (temp.style[props[i]] !== undefined) return true;
+            return false;
+        })(document.createElement('swipe'))
+    };
+
     /*
      * Swipe 2.0
      *
@@ -7,26 +27,7 @@ define(function (require, exports, module) {
      * Copyright 2013, MIT License
      *
      */
-
     function Swipe(container, options) {
-
-        // utilities
-        var noop = function () {
-        }; // simple no operation function
-        var offloadFn = function (fn) {
-            setTimeout(fn || noop, 0)
-        }; // offload a functions execution
-
-        // check browser capabilities
-        var browser = {
-            addEventListener: !!window.addEventListener,
-            touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
-            transitions: (function (temp) {
-                var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'];
-                for (var i in props) if (temp.style[props[i]] !== undefined) return true;
-                return false;
-            })(document.createElement('swipe'))
-        };
 
         // quit if no root element
         if (!container) return;
