@@ -26,7 +26,10 @@ define(function (require, exports, module) {
     function Swipe(container, options) {
 
         // quit if no root element
-        if (!container) return;
+        if (!container) {
+            throw new Error('根元素必须存在!');
+        }
+
         var element = container.children[0];
         var slides, slidePos, width, length;
         options = options || {};
