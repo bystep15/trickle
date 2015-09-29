@@ -73,15 +73,15 @@ define(function (require, exports, module) {
 
                 if (browser.transitions) {
                     slide.style.left = (pos * -that.width) + 'px';
-                    move(pos, that.index > pos ? -that.width : (that.index < pos ? that.width : 0), 0);
+                    that.move(pos, that.index > pos ? -that.width : (that.index < pos ? that.width : 0), 0);
                 }
 
             }
 
             // reposition elements before and after index
             if (that.options.continuous && browser.transitions) {
-                move(that.circle(that.index - 1), -that.width, 0);
-                move(that.circle(that.index + 1), that.width, 0);
+                that.move(that.circle(that.index - 1), -that.width, 0);
+                that.move(that.circle(that.index + 1), that.width, 0);
             }
 
             if (!browser.transitions) that.element.style.left = (that.index * -that.width) + 'px';
@@ -128,14 +128,14 @@ define(function (require, exports, module) {
                 var diff = Math.abs(that.index - to) - 1;
 
                 // move all the slides between index and to in the right direction
-                while (diff--) move(that.circle((to > that.index ? to : that.index) - diff - 1), that.width * direction, 0);
+                while (diff--) that.move(that.circle((to > that.index ? to : that.index) - diff - 1), that.width * direction, 0);
 
                 to = that.circle(to);
 
-                move(that.index, that.width * direction, slideSpeed || that.options.speed);
-                move(to, 0, slideSpeed || that.options.speed);
+                that.move(that.index, that.width * direction, slideSpeed || that.options.speed);
+                that.move(to, 0, slideSpeed || that.options.speed);
 
-                if (that.options.continuous) move(that.circle(to - direction), -(that.width * direction), 0); // we need to get the next in place
+                if (that.options.continuous) that.move(that.circle(to - direction), -(that.width * direction), 0); // we need to get the next in place
 
             } else {
 
@@ -148,12 +148,7 @@ define(function (require, exports, module) {
             offloadFn(that.options.callback && that.options.callback(that.index, that.slides[that.index]));
         }
 
-        function move(index, dist, speed) {
 
-            that.translate(index, dist, speed);
-            that.slidePos[index] = dist;
-
-        }
 
         // setup auto slideshow
         var delay = that.options.auto || 0;
@@ -321,29 +316,29 @@ define(function (require, exports, module) {
 
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(that.circle(that.index - 1), -that.width, 0);
-                                move(that.circle(that.index + 2), that.width, 0);
+                                that.move(that.circle(that.index - 1), -that.width, 0);
+                                that.move(that.circle(that.index + 2), that.width, 0);
 
                             } else {
-                                move(that.index - 1, -that.width, 0);
+                                that.move(that.index - 1, -that.width, 0);
                             }
 
-                            move(that.index, that.slidePos[that.index] - that.width, that.options.speed);
-                            move(that.circle(that.index + 1), that.slidePos[that.circle(that.index + 1)] - that.width, that.options.speed);
+                            that.move(that.index, that.slidePos[that.index] - that.width, that.options.speed);
+                            that.move(that.circle(that.index + 1), that.slidePos[that.circle(that.index + 1)] - that.width, that.options.speed);
                             that.index = that.circle(that.index + 1);
 
                         } else {
                             if (that.options.continuous) { // we need to get the next in this direction in place
 
-                                move(that.circle(that.index + 1), that.width, 0);
-                                move(that.circle(that.index - 2), -that.width, 0);
+                                that.move(that.circle(that.index + 1), that.width, 0);
+                                that.move(that.circle(that.index - 2), -that.width, 0);
 
                             } else {
-                                move(that.index + 1, that.width, 0);
+                                that.move(that.index + 1, that.width, 0);
                             }
 
-                            move(that.index, that.slidePos[that.index] + that.width, that.options.speed);
-                            move(that.circle(that.index - 1), that.slidePos[that.circle(that.index - 1)] + that.width, that.options.speed);
+                            that.move(that.index, that.slidePos[that.index] + that.width, that.options.speed);
+                            that.move(that.circle(that.index - 1), that.slidePos[that.circle(that.index - 1)] + that.width, that.options.speed);
                             that.index = that.circle(that.index - 1);
 
                         }
@@ -354,15 +349,15 @@ define(function (require, exports, module) {
 
                         if (that.options.continuous) {
 
-                            move(that.circle(that.index - 1), -that.width, that.options.speed);
-                            move(that.index, 0, that.options.speed);
-                            move(that.circle(that.index + 1), that.width, that.options.speed);
+                            that.move(that.circle(that.index - 1), -that.width, that.options.speed);
+                            that.move(that.index, 0, that.options.speed);
+                            that.move(that.circle(that.index + 1), that.width, that.options.speed);
 
                         } else {
 
-                            move(that.index - 1, -that.width, that.options.speed);
-                            move(that.index, 0, that.options.speed);
-                            move(that.index + 1, that.width, that.options.speed);
+                            that.move(that.index - 1, -that.width, that.options.speed);
+                            that.move(that.index, 0, that.options.speed);
+                            that.move(that.index + 1, that.width, that.options.speed);
                         }
 
                     }
@@ -588,6 +583,13 @@ define(function (require, exports, module) {
                 that.element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
 
             }, 4);
+
+        },
+
+        move: function (index, dist, speed) {
+
+            this.translate(index, dist, speed);
+            this.slidePos[index] = dist;
 
         }
     };
