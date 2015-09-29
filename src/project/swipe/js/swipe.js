@@ -30,36 +30,40 @@ define(function (require, exports, module) {
             throw new Error('根元素必须存在!');
         }
 
-        var element = container.children[0];
+
+        var that = this;
+
+        this.container = container;
+        this.element = this.container.children[0]; 
+        this.options = this.defaults(options);
+        var index = options.startSlide;
+        var speed = options.speed;
+
         var slides, slidePos, width, length;
-        options = options || {};
-        var index = parseInt(options.startSlide, 10) || 0;
-        var speed = options.speed || 300;
-        options.continuous = options.continuous !== undefined ? options.continuous : true;
 
         function setup() {
 
             // cache slides
-            slides = element.children;
+            slides = that.element.children;
             length = slides.length;
 
             // set continuous to false if only one slide
-            if (slides.length < 2) options.continuous = false;
+            if (slides.length < 2) that.options.continuous = false;
 
             //special case if two slides
-            if (browser.transitions && options.continuous && slides.length < 3) {
-                element.appendChild(slides[0].cloneNode(true));
-                element.appendChild(element.children[1].cloneNode(true));
-                slides = element.children;
+            if (browser.transitions && that.options.continuous && slides.length < 3) {
+                that.element.appendChild(slides[0].cloneNode(true));
+                that.element.appendChild(that.element.children[1].cloneNode(true));
+                slides = that.element.children;
             }
 
             // create an array to store current positions of each slide
             slidePos = new Array(slides.length);
 
             // determine width of each slide
-            width = container.getBoundingClientRect().width || container.offsetWidth;
+            width = that.container.getBoundingClientRect().width || that.container.offsetWidth;
 
-            element.style.width = (slides.length * width) + 'px';
+            that.element.style.width = (slides.length * width) + 'px';
 
             // stack elements
             var pos = slides.length;
@@ -78,27 +82,27 @@ define(function (require, exports, module) {
             }
 
             // reposition elements before and after index
-            if (options.continuous && browser.transitions) {
+            if (that.options.continuous && browser.transitions) {
                 move(circle(index - 1), -width, 0);
                 move(circle(index + 1), width, 0);
             }
 
-            if (!browser.transitions) element.style.left = (index * -width) + 'px';
+            if (!browser.transitions) that.element.style.left = (index * -width) + 'px';
 
-            container.style.visibility = 'visible';
+            that.container.style.visibility = 'visible';
 
         }
 
         function prev() {
 
-            if (options.continuous) slide(index - 1);
+            if (that.options.continuous) slide(index - 1);
             else if (index) slide(index - 1);
 
         }
 
         function next() {
 
-            if (options.continuous) slide(index + 1);
+            if (that.options.continuous) slide(index + 1);
             else if (index < slides.length - 1) slide(index + 1);
 
         }
@@ -120,7 +124,7 @@ define(function (require, exports, module) {
                 var direction = Math.abs(index - to) / (index - to); // 1: backward, -1: forward
 
                 // get the actual position of the slide
-                if (options.continuous) {
+                if (that.options.continuous) {
                     var natural_direction = direction;
                     direction = -slidePos[circle(to)] / width;
 
@@ -140,7 +144,7 @@ define(function (require, exports, module) {
                 move(index, width * direction, slideSpeed || speed);
                 move(to, 0, slideSpeed || speed);
 
-                if (options.continuous) move(circle(to - direction), -(width * direction), 0); // we need to get the next in place
+                if (that.options.continuous) move(circle(to - direction), -(width * direction), 0); // we need to get the next in place
 
             } else {
 
@@ -150,7 +154,7 @@ define(function (require, exports, module) {
             }
 
             index = to;
-            offloadFn(options.callback && options.callback(index, slides[index]));
+            offloadFn(that.options.callback && that.options.callback(index, slides[index]));
         }
 
         function move(index, dist, speed) {
@@ -185,7 +189,7 @@ define(function (require, exports, module) {
             // if not an animation, just reposition
             if (!speed) {
 
-                element.style.left = to + 'px';
+                that.element.style.left = to + 'px';
                 return;
 
             }
@@ -198,25 +202,25 @@ define(function (require, exports, module) {
 
                 if (timeElap > speed) {
 
-                    element.style.left = to + 'px';
+                    that.element.style.left = to + 'px';
 
                     if (delay) begin();
 
-                    options.transitionEnd && options.transitionEnd.call(event, index, slides[index]);
+                    that.options.transitionEnd && that.options.transitionEnd.call(event, index, slides[index]);
 
                     clearInterval(timer);
                     return;
 
                 }
 
-                element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
+                that.element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
 
             }, 4);
 
         }
 
         // setup auto slideshow
-        var delay = options.auto || 0;
+        var delay = that.options.auto || 0;
         var interval;
 
         function begin() {
@@ -265,7 +269,7 @@ define(function (require, exports, module) {
                         break;
                 }
 
-                if (options.stopPropagation) event.stopPropagation();
+                if (that.options.stopPropagation) event.stopPropagation();
 
             },
             start: function (event) {
@@ -291,8 +295,8 @@ define(function (require, exports, module) {
                 delta = {};
 
                 // attach touchmove and touchend listeners
-                element.addEventListener('touchmove', this, false);
-                element.addEventListener('touchend', this, false);
+                that.element.addEventListener('touchmove', this, false);
+                that.element.addEventListener('touchend', this, false);
 
             },
             move: function (event) {
@@ -300,7 +304,7 @@ define(function (require, exports, module) {
                 // ensure swiping with one touch and not pinching
                 if (event.touches.length > 1 || event.scale && event.scale !== 1) return
 
-                if (options.disableScroll) event.preventDefault();
+                if (that.options.disableScroll) event.preventDefault();
 
                 var touches = event.touches[0];
 
@@ -325,7 +329,7 @@ define(function (require, exports, module) {
                     stop();
 
                     // increase resistance if first or last slide
-                    if (options.continuous) { // we don't add resistance at the end
+                    if (that.options.continuous) { // we don't add resistance at the end
 
                         translate(circle(index - 1), delta.x + slidePos[circle(index - 1)], 0);
                         translate(index, delta.x + slidePos[index], 0);
@@ -367,7 +371,7 @@ define(function (require, exports, module) {
                     !index && delta.x > 0                            // if first slide and slide amt is greater than 0
                     || index == slides.length - 1 && delta.x < 0;    // or if last slide and slide amt is less than 0
 
-                if (options.continuous) isPastBounds = false;
+                if (that.options.continuous) isPastBounds = false;
 
                 // determine direction of swipe (true:right, false:left)
                 var direction = delta.x < 0;
@@ -379,7 +383,7 @@ define(function (require, exports, module) {
 
                         if (direction) {
 
-                            if (options.continuous) { // we need to get the next in this direction in place
+                            if (that.options.continuous) { // we need to get the next in this direction in place
 
                                 move(circle(index - 1), -width, 0);
                                 move(circle(index + 2), width, 0);
@@ -393,7 +397,7 @@ define(function (require, exports, module) {
                             index = circle(index + 1);
 
                         } else {
-                            if (options.continuous) { // we need to get the next in this direction in place
+                            if (that.options.continuous) { // we need to get the next in this direction in place
 
                                 move(circle(index + 1), width, 0);
                                 move(circle(index - 2), -width, 0);
@@ -408,11 +412,11 @@ define(function (require, exports, module) {
 
                         }
 
-                        options.callback && options.callback(index, slides[index]);
+                        that.options.callback && that.options.callback(index, slides[index]);
 
                     } else {
 
-                        if (options.continuous) {
+                        if (that.options.continuous) {
 
                             move(circle(index - 1), -width, speed);
                             move(index, 0, speed);
@@ -430,8 +434,8 @@ define(function (require, exports, module) {
                 }
 
                 // kill touchmove and touchend event listeners until touchstart called again
-                element.removeEventListener('touchmove', events, false)
-                element.removeEventListener('touchend', events, false)
+                that.element.removeEventListener('touchmove', events, false)
+                that.element.removeEventListener('touchend', events, false)
 
             },
             transitionEnd: function (event) {
@@ -440,7 +444,7 @@ define(function (require, exports, module) {
 
                     if (delay) begin();
 
-                    options.transitionEnd && options.transitionEnd.call(event, index, slides[index]);
+                    that.options.transitionEnd && that.options.transitionEnd.call(event, index, slides[index]);
 
                 }
 
@@ -459,14 +463,14 @@ define(function (require, exports, module) {
         if (browser.addEventListener) {
 
             // set touchstart event on element
-            if (browser.touch) element.addEventListener('touchstart', events, false);
+            if (browser.touch) that.element.addEventListener('touchstart', events, false);
 
             if (browser.transitions) {
-                element.addEventListener('webkitTransitionEnd', events, false);
-                element.addEventListener('msTransitionEnd', events, false);
-                element.addEventListener('oTransitionEnd', events, false);
-                element.addEventListener('otransitionend', events, false);
-                element.addEventListener('transitionend', events, false);
+                that.element.addEventListener('webkitTransitionEnd', events, false);
+                that.element.addEventListener('msTransitionEnd', events, false);
+                that.element.addEventListener('oTransitionEnd', events, false);
+                that.element.addEventListener('otransitionend', events, false);
+                that.element.addEventListener('transitionend', events, false);
             }
 
             // set resize event on window
@@ -482,11 +486,8 @@ define(function (require, exports, module) {
 
         // expose the Swipe API
         return {
-            setup: function () {
+            setup: setup,
 
-                setup();
-
-            },
             slide: function (to, speed) {
 
                 // cancel slideshow
@@ -534,8 +535,8 @@ define(function (require, exports, module) {
                 stop();
 
                 // reset element
-                element.style.width = '';
-                element.style.left = '';
+                that.element.style.width = '';
+                that.element.style.left = '';
 
                 // reset slides
                 var pos = slides.length;
@@ -553,12 +554,12 @@ define(function (require, exports, module) {
                 if (browser.addEventListener) {
 
                     // remove current event listeners
-                    element.removeEventListener('touchstart', events, false);
-                    element.removeEventListener('webkitTransitionEnd', events, false);
-                    element.removeEventListener('msTransitionEnd', events, false);
-                    element.removeEventListener('oTransitionEnd', events, false);
-                    element.removeEventListener('otransitionend', events, false);
-                    element.removeEventListener('transitionend', events, false);
+                    that.element.removeEventListener('touchstart', events, false);
+                    that.element.removeEventListener('webkitTransitionEnd', events, false);
+                    that.element.removeEventListener('msTransitionEnd', events, false);
+                    that.element.removeEventListener('oTransitionEnd', events, false);
+                    that.element.removeEventListener('otransitionend', events, false);
+                    that.element.removeEventListener('transitionend', events, false);
                     window.removeEventListener('resize', events, false);
 
                 }
@@ -572,6 +573,18 @@ define(function (require, exports, module) {
         }
 
     }
+
+    Swipe.prototype = {
+        constructor: Swipe,
+
+        defaults: function (options) {
+            options = options || {};
+            options.startSlide = parseInt(options.startSlide, 10) || 0;
+            options.speed = options.speed || 300;
+            options.continuous = options.continuous || true;
+            return options;
+        }
+    };
 
     module.exports = Swipe;
 });
