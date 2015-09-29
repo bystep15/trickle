@@ -30,7 +30,6 @@ define(function (require, exports, module) {
             throw new Error('根元素必须存在!');
         }
 
-
         var that = this;
 
         this.container = container;
@@ -40,11 +39,6 @@ define(function (require, exports, module) {
         // setup auto slideshow
         that.delay = this.options.auto;
         that.interval = null;
-
-
-
-
-
 
         // setup initial vars
         var start = {};
@@ -259,13 +253,15 @@ define(function (require, exports, module) {
 
             }
 
-        }
+        };
 
         // trigger setup
         that.setup();
 
         // start auto slideshow if applicable
-        if (that.delay) that.begin();
+        if (that.delay) {
+            that.begin();
+        }
 
 
         // add event listeners
