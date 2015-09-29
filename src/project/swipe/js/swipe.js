@@ -34,10 +34,9 @@ define(function (require, exports, module) {
         var that = this;
 
         this.container = container;
-        this.element = this.container.children[0]; 
+        this.element = this.container.children[0];
         this.options = this.defaults(options);
         var index = options.startSlide;
-        var speed = options.speed;
 
         var slides, slidePos, width, length;
 
@@ -141,15 +140,15 @@ define(function (require, exports, module) {
 
                 to = circle(to);
 
-                move(index, width * direction, slideSpeed || speed);
-                move(to, 0, slideSpeed || speed);
+                move(index, width * direction, slideSpeed || that.options.speed);
+                move(to, 0, slideSpeed || that.options.speed);
 
                 if (that.options.continuous) move(circle(to - direction), -(width * direction), 0); // we need to get the next in place
 
             } else {
 
                 to = circle(to);
-                animate(index * -width, to * -width, slideSpeed || speed);
+                animate(index * -width, to * -width, slideSpeed || that.options.speed);
                 //no fallback for a circular continuous if the browser does not accept transitions
             }
 
@@ -392,8 +391,8 @@ define(function (require, exports, module) {
                                 move(index - 1, -width, 0);
                             }
 
-                            move(index, slidePos[index] - width, speed);
-                            move(circle(index + 1), slidePos[circle(index + 1)] - width, speed);
+                            move(index, slidePos[index] - width, that.options.speed);
+                            move(circle(index + 1), slidePos[circle(index + 1)] - width, that.options.speed);
                             index = circle(index + 1);
 
                         } else {
@@ -406,8 +405,8 @@ define(function (require, exports, module) {
                                 move(index + 1, width, 0);
                             }
 
-                            move(index, slidePos[index] + width, speed);
-                            move(circle(index - 1), slidePos[circle(index - 1)] + width, speed);
+                            move(index, slidePos[index] + width, that.options.speed);
+                            move(circle(index - 1), slidePos[circle(index - 1)] + width, that.options.speed);
                             index = circle(index - 1);
 
                         }
@@ -418,15 +417,15 @@ define(function (require, exports, module) {
 
                         if (that.options.continuous) {
 
-                            move(circle(index - 1), -width, speed);
-                            move(index, 0, speed);
-                            move(circle(index + 1), width, speed);
+                            move(circle(index - 1), -width, that.options.speed);
+                            move(index, 0, that.options.speed);
+                            move(circle(index + 1), width, that.options.speed);
 
                         } else {
 
-                            move(index - 1, -width, speed);
-                            move(index, 0, speed);
-                            move(index + 1, width, speed);
+                            move(index - 1, -width, that.options.speed);
+                            move(index, 0, that.options.speed);
+                            move(index + 1, width, that.options.speed);
                         }
 
                     }
