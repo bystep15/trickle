@@ -19,11 +19,11 @@ define(function (require) {
 
     $(btnPrev).bind('click', function (e) {
         swipe.prev();
-    }, false);
+    });
 
     $(btnNext).bind('click', function (e) {
         swipe.next();
-    }, false);
+    });
 
     window.swipe = swipe;
 });
