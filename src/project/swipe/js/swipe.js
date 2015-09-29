@@ -1,3 +1,6 @@
+/*
+ * 在[Swipe](https://github.com/thebird/Swipe)基础上修改
+ */
 define(function (require, exports, module) {
     'use strict';
 
@@ -20,13 +23,6 @@ define(function (require, exports, module) {
         })(document.createElement('swipe'))
     };
 
-    /*
-     * Swipe 2.0
-     *
-     * Brad Birdsall
-     * Copyright 2013, MIT License
-     *
-     */
     function Swipe(container, options) {
 
         // quit if no root element
