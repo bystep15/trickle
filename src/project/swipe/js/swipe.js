@@ -41,18 +41,9 @@ define(function (require, exports, module) {
         that.delay = this.options.auto;
         that.interval = null;
 
-        function begin() {
 
-            that.interval = setTimeout(that.next.bind(that), that.delay);
 
-        }
 
-        function stop() {
-
-            that.delay = 0;
-            clearTimeout(that.interval);
-
-        }
 
 
         // setup initial vars
@@ -144,7 +135,7 @@ define(function (require, exports, module) {
                     event.preventDefault();
 
                     // stop slideshow
-                    stop();
+                    that.stop();
 
                     // increase resistance if first or last slide
                     if (that.options.continuous) { // we don't add resistance at the end
@@ -260,7 +251,7 @@ define(function (require, exports, module) {
 
                 if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
 
-                    if (that.delay) begin();
+                    if (that.delay) that.begin();
 
                     that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
 
@@ -274,7 +265,7 @@ define(function (require, exports, module) {
         that.setup();
 
         // start auto slideshow if applicable
-        if (that.delay) begin();
+        if (that.delay) that.begin();
 
 
         // add event listeners
@@ -307,7 +298,7 @@ define(function (require, exports, module) {
             slide: function (to, speed) {
 
                 // cancel slideshow
-                stop();
+                that.stop();
 
                 that.slide(to, speed);
 
@@ -315,7 +306,7 @@ define(function (require, exports, module) {
             prev: function () {
 
                 // cancel slideshow
-                stop();
+                that.stop();
 
                 that.prev();
 
@@ -323,7 +314,7 @@ define(function (require, exports, module) {
             next: function () {
 
                 // cancel slideshow
-                stop();
+                that.stop();
 
                 that.next();
 
@@ -331,7 +322,7 @@ define(function (require, exports, module) {
             stop: function () {
 
                 // cancel slideshow
-                stop();
+                that.stop();
 
             },
             getPos: function () {
@@ -348,7 +339,7 @@ define(function (require, exports, module) {
             kill: function () {
 
                 // cancel slideshow
-                stop();
+                that.stop();
 
                 // reset element
                 that.element.style.width = '';
@@ -609,6 +600,19 @@ define(function (require, exports, module) {
             if (this.options.continuous || this.index < (this.slides.length - 1)) {
                 this.slide(this.index + 1);
             }
+
+        },
+
+        begin: function () {
+
+            this.interval = setTimeout(this.next.bind(this), this.delay);
+
+        },
+
+        stop: function () {
+
+            this.delay = 0;
+            clearTimeout(this.interval);
 
         }
     };
