@@ -140,7 +140,7 @@ define(function (require, exports, module) {
             } else {
 
                 to = that.circle(to);
-                animate(that.index * -that.width, to * -that.width, slideSpeed || that.options.speed);
+                that.animate(that.index * -that.width, to * -that.width, slideSpeed || that.options.speed);
                 //no fallback for a circular continuous if the browser does not accept transitions
             }
 
@@ -152,41 +152,6 @@ define(function (require, exports, module) {
 
             that.translate(index, dist, speed);
             that.slidePos[index] = dist;
-
-        }
-
-        function animate(from, to, speed) {
-
-            // if not an animation, just reposition
-            if (!speed) {
-
-                that.element.style.left = to + 'px';
-                return;
-
-            }
-
-            var start = +new Date;
-
-            var timer = setInterval(function () {
-
-                var timeElap = +new Date - start;
-
-                if (timeElap > speed) {
-
-                    that.element.style.left = to + 'px';
-
-                    if (delay) begin();
-
-                    that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
-
-                    clearInterval(timer);
-                    return;
-
-                }
-
-                that.element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
-
-            }, 4);
 
         }
 
@@ -587,6 +552,42 @@ define(function (require, exports, module) {
             style.msTransform =
                 style.MozTransform =
                     style.OTransform = 'translateX(' + dist + 'px)';
+
+        },
+
+        animate: function (from, to, speed) {
+            var that = this;
+
+            // if not an animation, just reposition
+            if (!speed) {
+
+                that.element.style.left = to + 'px';
+                return;
+
+            }
+
+            var start = +new Date;
+
+            var timer = setInterval(function () {
+
+                var timeElap = +new Date - start;
+
+                if (timeElap > speed) {
+
+                    that.element.style.left = to + 'px';
+
+                    if (delay) begin();
+
+                    that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
+
+                    clearInterval(timer);
+                    return;
+
+                }
+
+                that.element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
+
+            }, 4);
 
         }
     };
