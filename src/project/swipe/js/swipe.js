@@ -38,58 +38,6 @@ define(function (require, exports, module) {
         this.options = this.defaults(options);
         this.index = this.options.startSlide;
 
-        function setup() {
-
-            // cache slides
-            that.slides = that.element.children;
-            that.length = that.slides.length;
-
-            // set continuous to false if only one slide
-            if (that.slides.length < 2) that.options.continuous = false;
-
-            //special case if two slides
-            if (browser.transitions && that.options.continuous && that.slides.length < 3) {
-                that.element.appendChild(that.slides[0].cloneNode(true));
-                that.element.appendChild(that.element.children[1].cloneNode(true));
-                that.slides = that.element.children;
-            }
-
-            // create an array to store current positions of each slide
-            that.slidePos = new Array(that.slides.length);
-
-            // determine width of each slide
-            that.width = that.container.getBoundingClientRect().width || that.container.offsetWidth;
-
-            that.element.style.width = (that.slides.length * that.width) + 'px';
-
-            // stack elements
-            var pos = that.slides.length;
-            while (pos--) {
-
-                var slide = that.slides[pos];
-
-                slide.style.width = that.width + 'px';
-                slide.setAttribute('data-index', pos);
-
-                if (browser.transitions) {
-                    slide.style.left = (pos * -that.width) + 'px';
-                    that.move(pos, that.index > pos ? -that.width : (that.index < pos ? that.width : 0), 0);
-                }
-
-            }
-
-            // reposition elements before and after index
-            if (that.options.continuous && browser.transitions) {
-                that.move(that.circle(that.index - 1), -that.width, 0);
-                that.move(that.circle(that.index + 1), that.width, 0);
-            }
-
-            if (!browser.transitions) that.element.style.left = (that.index * -that.width) + 'px';
-
-            that.container.style.visibility = 'visible';
-
-        }
-
         // setup auto slideshow
         var delay = that.options.auto || 0;
         var interval;
@@ -136,7 +84,7 @@ define(function (require, exports, module) {
                         offloadFn(this.transitionEnd(event));
                         break;
                     case 'resize':
-                        offloadFn(setup);
+                        offloadFn(that.setup);
                         break;
                 }
 
@@ -324,7 +272,7 @@ define(function (require, exports, module) {
         }
 
         // trigger setup
-        setup();
+        that.setup();
 
         // start auto slideshow if applicable
         if (delay) begin();
@@ -349,13 +297,13 @@ define(function (require, exports, module) {
 
         } else {
 
-            window.onresize = setup; // to play nice with old IE
+            window.onresize = that.setup; // to play nice with old IE
 
         }
 
         // expose the Swipe API
         return {
-            setup: setup,
+            setup: that.setup,
 
             slide: function (to, speed) {
 
@@ -452,6 +400,61 @@ define(function (require, exports, module) {
             options.speed = options.speed || 300;
             options.continuous = options.continuous || true;
             return options;
+        },
+
+        setup: function () {
+            var that = this;
+
+            // cache slides
+            that.slides = that.element.children;
+            that.length = that.slides.length;
+
+            // set continuous to false if only one slide
+            if (that.slides.length < 2) {
+                that.options.continuous = false;
+            }
+
+            //special case if two slides
+            if (browser.transitions && that.options.continuous && that.slides.length < 3) {
+                that.element.appendChild(that.slides[0].cloneNode(true));
+                that.element.appendChild(that.element.children[1].cloneNode(true));
+                that.slides = that.element.children;
+            }
+
+            // create an array to store current positions of each slide
+            that.slidePos = new Array(that.slides.length);
+
+            // determine width of each slide
+            that.width = that.container.getBoundingClientRect().width || that.container.offsetWidth;
+
+            that.element.style.width = (that.slides.length * that.width) + 'px';
+
+            // stack elements
+            var pos = that.slides.length;
+            while (pos--) {
+
+                var slide = that.slides[pos];
+
+                slide.style.width = that.width + 'px';
+                slide.setAttribute('data-index', pos);
+
+                if (browser.transitions) {
+                    slide.style.left = (pos * -that.width) + 'px';
+                    that.move(pos, that.index > pos ? -that.width : (that.index < pos ? that.width : 0), 0);
+                }
+
+            }
+
+            // reposition elements before and after index
+            if (that.options.continuous && browser.transitions) {
+                that.move(that.circle(that.index - 1), -that.width, 0);
+                that.move(that.circle(that.index + 1), that.width, 0);
+            }
+
+            if (!browser.transitions) that.element.style.left = (that.index * -that.width) + 'px';
+
+            that.container.style.visibility = 'visible';
+
         },
 
         /**
