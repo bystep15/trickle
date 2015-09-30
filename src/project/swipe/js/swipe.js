@@ -402,7 +402,7 @@ define(function (require, exports, module) {
                     offloadFn(this.transitionEndHandler(event));
                     break;
                 case 'resize':
-                    offloadFn(that.setup);
+                    offloadFn(proxy(this.setup, this));
                     break;
             }
 
