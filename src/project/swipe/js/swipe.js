@@ -4,15 +4,6 @@
 define(function (require, exports, module) {
     'use strict';
 
-    if (!Function.prototype.bind) {
-        Function.prototype.bind = function (context) {
-            var func = this;
-            return function () {
-                func.apply(context, arguments);
-            };
-        };
-    }
-
     // utilities
     // simple no operation function
     var noop = function () {
@@ -31,6 +22,15 @@ define(function (require, exports, module) {
             return false;
         })(document.createElement('swipe'))
     };
+
+    function proxy(fn, context) {
+        if (fn.bind) {
+            return fn.bind(context);
+        }
+        return function () {
+            fn.apply(context, arguments);
+        };
+    }
 
     function Swipe(container, options) {
 
@@ -84,7 +84,7 @@ define(function (require, exports, module) {
 
         } else {
 
-            window.onresize = that.setup.bind(that); // to play nice with old IE
+            window.onresize = proxy(that.setup, that); // to play nice with old IE
 
         }
     }
@@ -317,7 +317,7 @@ define(function (require, exports, module) {
 
         begin: function () {
 
-            this.interval = setTimeout(this.next.bind(this), this.delay);
+            this.interval = setTimeout(proxy(this.next, this), this.delay);
 
         },
 
