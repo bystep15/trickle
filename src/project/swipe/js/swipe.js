@@ -7,10 +7,15 @@ define(function (require, exports, module) {
     // utilities
     // check browser capabilities
     var browser = {
-        touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+        touch: ('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch),
         transitions: (function (temp) {
-            var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'];
-            for (var i in props) if (temp.style[props[i]] !== undefined) return true;
+            var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'],
+                i;
+            for (i in props) {
+                if (temp.style[props[i]] !== undefined) {
+                    return true;
+                }
+            }
             return false;
         })(document.createElement('swipe'))
     };
@@ -62,7 +67,6 @@ define(function (require, exports, module) {
 
         // add event listeners
         if (this.element.addEventListener) {
-
             // set touchstart event on element
             if (browser.touch) {
                 this.element.addEventListener('touchstart', this, false);
@@ -75,14 +79,14 @@ define(function (require, exports, module) {
                 this.element.addEventListener('otransitionend', this, false);
                 this.element.addEventListener('transitionend', this, false);
             }
+        }
 
-            // set resize event on window
+        // set resize event on window
+        if (window.addEventListener) {
             window.addEventListener('resize', this, false);
-
         } else if (window.attachEvent) {
-
-            window.attachEvent('onresize', proxy(this.setup, this));        // to play nice with old IE
-
+            // to play nice with old IE
+            window.attachEvent('onresize', proxy(this.setup, this));
         }
     }
 
