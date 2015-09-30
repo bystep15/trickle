@@ -7,7 +7,6 @@ define(function (require, exports, module) {
     // utilities
     // check browser capabilities
     var browser = {
-        addEventListener: !!window.addEventListener,
         touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
         transitions: (function (temp) {
             var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'];
@@ -62,7 +61,7 @@ define(function (require, exports, module) {
         }
 
         // add event listeners
-        if (browser.addEventListener) {
+        if (this.element.addEventListener) {
 
             // set touchstart event on element
             if (browser.touch) {
@@ -359,7 +358,7 @@ define(function (require, exports, module) {
             }
 
             // removed event listeners
-            if (browser.addEventListener) {
+            if (that.element.removeEventListener) {
 
                 // remove current event listeners
                 that.element.removeEventListener('touchstart', that, false);
