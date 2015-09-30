@@ -35,58 +35,54 @@ define(function (require, exports, module) {
     }
 
     function Swipe(container, options) {
-
         // quit if no root element
         if (!container) {
             throw new Error('根元素必须存在!');
         }
-
-        var that = this;
 
         this.container = container;
         this.element = this.container.children[0];
         this.options = this.defaults(options);
         this.index = this.options.startSlide;
         // setup auto slideshow
-        that.delay = this.options.auto;
-        that.interval = null;
+        this.delay = this.options.auto;
+        this.interval = null;
 
         // setup initial vars
-        that.start = {};
-        that.delta = {};
-        that.isScrolling = undefined;
+        this.start = {};
+        this.delta = {};
+        this.isScrolling = undefined;
 
         // trigger setup
-        that.setup();
+        this.setup();
 
         // start auto slideshow if applicable
-        if (that.delay) {
-            that.begin();
+        if (this.delay) {
+            this.begin();
         }
-
 
         // add event listeners
         if (browser.addEventListener) {
 
             // set touchstart event on element
             if (browser.touch) {
-                that.element.addEventListener('touchstart', that, false);
+                this.element.addEventListener('touchstart', this, false);
             }
 
             if (browser.transitions) {
-                that.element.addEventListener('webkitTransitionEnd', that, false);
-                that.element.addEventListener('msTransitionEnd', that, false);
-                that.element.addEventListener('oTransitionEnd', that, false);
-                that.element.addEventListener('otransitionend', that, false);
-                that.element.addEventListener('transitionend', that, false);
+                this.element.addEventListener('webkitTransitionEnd', this, false);
+                this.element.addEventListener('msTransitionEnd', this, false);
+                this.element.addEventListener('oTransitionEnd', this, false);
+                this.element.addEventListener('otransitionend', this, false);
+                this.element.addEventListener('transitionend', this, false);
             }
 
             // set resize event on window
-            window.addEventListener('resize', that, false);
+            window.addEventListener('resize', this, false);
 
         } else {
 
-            window.onresize = proxy(that.setup, that); // to play nice with old IE
+            window.onresize = proxy(this.setup, this); // to play nice with old IE
 
         }
     }
