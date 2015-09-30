@@ -5,13 +5,6 @@ define(function (require, exports, module) {
     'use strict';
 
     // utilities
-    // simple no operation function
-    var noop = function () {
-    };
-    // offload a functions execution
-    var offloadFn = function (fn) {
-        setTimeout(fn || noop, 0)
-    };
     // check browser capabilities
     var browser = {
         addEventListener: !!window.addEventListener,
@@ -22,6 +15,15 @@ define(function (require, exports, module) {
             return false;
         })(document.createElement('swipe'))
     };
+
+    // simple no operation function
+    function noop() {
+    }
+
+    // offload a functions execution
+    function offloadFn(fn) {
+        setTimeout(fn || noop, 0);
+    }
 
     function proxy(fn, context) {
         if (fn.bind) {
