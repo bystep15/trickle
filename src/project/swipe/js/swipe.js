@@ -34,17 +34,17 @@ define(function (require, exports, module) {
     }
 
     function Swipe(container, options) {
-        // quit if no root element
         if (!container) {
+            // quit if no root element
             throw new Error('根元素必须存在!');
         }
 
         this.container = container;
         this.element = this.container.children[0];
         this.options = this.defaults(options);
+
         this.index = this.options.startSlide;
-        // setup auto slideshow
-        this.delay = this.options.auto;
+        this.delay = this.options.auto;     // setup auto slideshow
         this.interval = null;
 
         // setup initial vars
@@ -79,9 +79,9 @@ define(function (require, exports, module) {
             // set resize event on window
             window.addEventListener('resize', this, false);
 
-        } else {
+        } else if (window.attachEvent) {
 
-            window.onresize = proxy(this.setup, this); // to play nice with old IE
+            window.attachEvent('onresize', proxy(this.setup, this));        // to play nice with old IE
 
         }
     }
