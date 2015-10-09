@@ -86,7 +86,8 @@ define(function (require, exports, module) {
             window.addEventListener('resize', this, false);
         } else if (window.attachEvent) {
             // to play nice with old IE
-            window.attachEvent('onresize', proxy(this.setup, this));
+            this.onresize = proxy(this.setup, this);
+            window.attachEvent('onresize', this.onresize);
         }
     }
 
@@ -376,7 +377,7 @@ define(function (require, exports, module) {
             }
             else {
 
-                window.onresize = null;
+                window.detachEvent('onresize', this.onresize);
 
             }
 
