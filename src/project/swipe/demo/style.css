@@ -75,6 +75,8 @@ html, body {
     overflow: hidden;
     visibility: hidden;
     position: relative;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .swipe-wrap {
