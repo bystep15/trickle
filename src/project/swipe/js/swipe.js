@@ -577,14 +577,20 @@ define(function (require, exports, module) {
             that.element.removeEventListener('touchend', that, false);
 
         },
+
         transitionEndHandler: function (event) {
-            var that = this;
 
-            if (parseInt(event.target.getAttribute('data-index'), 10) == that.index) {
+            var index = this.index;
 
-                if (that.delay) that.begin();
+            if (parseInt(event.target.getAttribute('data-index'), 10) == index) {
 
-                that.options.transitionEnd && that.options.transitionEnd.call(event, that.index, that.slides[that.index]);
+                if (this.delay) {
+                    this.begin();
+                }
+
+                if (this.options.transitionEnd) {
+                    this.options.transitionEnd.call(event, index, event.target);
+                }
 
             }
 
