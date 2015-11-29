@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="zh-cmn-Hans" class="ie6"><![endif]-->
+<!--[if IE 7]>
+<html lang="zh-cmn-Hans" class="ie7"><![endif]-->
+<!--[if IE 8]>
+<html lang="zh-cmn-Hans" class="ie8"><![endif]-->
+<!--[if (gte IE 9)]><!-->
+<html lang="zh-cmn-Hans"><!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+    <title>Mask</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+    <style>
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: red;
+    }
+
+    #mask {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+</head>
+<body>
+
+<div id="mask"></div>
+
+<script src="//172.16.103.199:3001/concat/??lib/seajs/2.3.0/sea.js,config.js"></script>
+<script>
+    seajs.use('project/mask/demo/main');
+</script>
+</body>
+</html>
