@@ -1,5 +1,67 @@
-yii.validation = (function ($) {
-    var pub = {
+define(function (require, exports, module) {
+    var $ = require('jquery'),
+        pub;
+
+    function getUploadedFiles(attribute, messages, options) {
+        // Skip validation if File API is not available
+        if (typeof File === "undefined") {
+            return [];
+        }
+
+        var files = $(attribute.input).get(0).files;
+        if (!files) {
+            messages.push(options.message);
+            return [];
+        }
+
+        if (files.length === 0) {
+            if (!options.skipOnEmpty) {
+                messages.push(options.uploadRequired);
+            }
+            return [];
+        }
+
+        if (options.maxFiles && options.maxFiles < files.length) {
+            messages.push(options.tooMany);
+            return [];
+        }
+
+        return files;
+    }
+
+    function validateFile(file, messages, options) {
+        if (options.extensions && options.extensions.length > 0) {
+            var index, ext;
+
+            index = file.name.lastIndexOf('.');
+
+            if (!~index) {
+                ext = '';
+            } else {
+                ext = file.name.substr(index + 1, file.name.length).toLowerCase();
+            }
+
+            if (!~options.extensions.indexOf(ext)) {
+                messages.push(options.wrongExtension.replace(/\{file\}/g, file.name));
+            }
+        }
+
+        if (options.mimeTypes && options.mimeTypes.length > 0) {
+            if (!~options.mimeTypes.indexOf(file.type)) {
+                messages.push(options.wrongMimeType.replace(/\{file\}/g, file.name));
+            }
+        }
+
+        if (options.maxSize && options.maxSize < file.size) {
+            messages.push(options.tooBig.replace(/\{file\}/g, file.name));
+        }
+
+        if (options.minSize && options.minSize > file.size) {
+            messages.push(options.tooSmall.replace(/\{file\}/g, file.name));
+        }
+    }
+
+    pub = {
         isEmpty: function (value) {
             return value === null || value === undefined || value == [] || value === '';
         },
@@ -365,64 +427,5 @@ yii.validation = (function ($) {
         }
     };
 
-    function getUploadedFiles(attribute, messages, options) {
-        // Skip validation if File API is not available
-        if (typeof File === "undefined") {
-            return [];
-        }
-
-        var files = $(attribute.input).get(0).files;
-        if (!files) {
-            messages.push(options.message);
-            return [];
-        }
-
-        if (files.length === 0) {
-            if (!options.skipOnEmpty) {
-                messages.push(options.uploadRequired);
-            }
-            return [];
-        }
-
-        if (options.maxFiles && options.maxFiles < files.length) {
-            messages.push(options.tooMany);
-            return [];
-        }
-
-        return files;
-    }
-
-    function validateFile(file, messages, options) {
-        if (options.extensions && options.extensions.length > 0) {
-            var index, ext;
-
-            index = file.name.lastIndexOf('.');
-
-            if (!~index) {
-                ext = '';
-            } else {
-                ext = file.name.substr(index + 1, file.name.length).toLowerCase();
-            }
-
-            if (!~options.extensions.indexOf(ext)) {
-                messages.push(options.wrongExtension.replace(/\{file\}/g, file.name));
-            }
-        }
-
-        if (options.mimeTypes && options.mimeTypes.length > 0) {
-            if (!~options.mimeTypes.indexOf(file.type)) {
-                messages.push(options.wrongMimeType.replace(/\{file\}/g, file.name));
-            }
-        }
-
-        if (options.maxSize && options.maxSize < file.size) {
-            messages.push(options.tooBig.replace(/\{file\}/g, file.name));
-        }
-
-        if (options.minSize && options.minSize > file.size) {
-            messages.push(options.tooSmall.replace(/\{file\}/g, file.name));
-        }
-    }
-
-    return pub;
-})(jQuery);
+    module.exports = pub;
+});
