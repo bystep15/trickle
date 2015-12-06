@@ -1,5 +1,6 @@
 define(function (require, exports, module) {
     var $ = require('jquery'),
+        punycode = require('punycode'),
         pub;
 
     function getUploadedFiles(attribute, messages, options) {
@@ -74,10 +75,12 @@ define(function (require, exports, module) {
             var valid = false;
             if (options.requiredValue === undefined) {
                 var isString = typeof value == 'string' || value instanceof String;
-                if (options.strict && value !== undefined || !options.strict && !pub.isEmpty(isString ? $.trim(value) : value)) {
+                if (options.strict && value !== undefined ||
+                        !options.strict && !pub.isEmpty(isString ? $.trim(value) : value)) {
                     valid = true;
                 }
-            } else if (!options.strict && value == options.requiredValue || options.strict && value === options.requiredValue) {
+            } else if (!options.strict && value == options.requiredValue ||
+                    options.strict && value === options.requiredValue) {
                 valid = true;
             }
 
@@ -230,7 +233,8 @@ define(function (require, exports, module) {
                 return;
             }
 
-            if (!options.not && !value.match(options.pattern) || options.not && value.match(options.pattern)) {
+            if (!options.not && !value.match(options.pattern) ||
+                    options.not && value.match(options.pattern)) {
                 pub.addMessage(messages, options.message, value);
             }
         },
