@@ -17,6 +17,30 @@
     <link href='style.css' rel='stylesheet'/>
 </head>
 <body>
+<form class="cmxform" id="commentForm" method="get" action="">
+    <fieldset>
+        <legend>Please provide your name, email address (won't be published) and a comment</legend>
+        <p>
+            <label for="name">Name (required, at least 2 characters)</label>
+            <input id="name" name="name" minlength="2" type="text" required>
+        </p>
+        <p>
+            <label for="email">E-Mail (required)</label>
+            <input id="email" type="email" name="email" required>
+        </p>
+        <p>
+            <label for="url">URL (optional)</label>
+            <input id="url" type="url" name="url">
+        </p>
+        <p>
+            <label for="comment">Your comment (required)</label>
+            <textarea id="comment" name="comment" required></textarea>
+        </p>
+        <p>
+            <input class="submit" type="submit" value="Submit">
+        </p>
+    </fieldset>
+</form>
 <script src="//localhost:3001/concat/??lib/seajs/2.3.0/sea.js,config.js"></script>
 <script>
     seajs.use('project/validation/demo/main');

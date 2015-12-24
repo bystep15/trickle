@@ -1,5 +1,6 @@
 define(function (require) {
-    var validation = require('../js/validation');
+    var $ = require('jquery'),
+        validation = require('../js/validation');
 
-    console.log(validation);
+    validation.validate($("#commentForm"));
 });
