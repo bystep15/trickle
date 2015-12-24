@@ -47,4 +47,26 @@ describe('Validation Test Suite', function () {
 
     });
 
+    describe('Validation.prototype.extendOptions', function () {
+
+        it ('options onsubmit的默认值为true', inject(function (Validation) {
+
+            var options = Validation.prototype.extendOptions();
+
+            expect(options.onsubmit).toBe(true);
+
+        }));
+
+        it ('可以通过传入配置参数修改options onsubmit的默认值', inject(function (Validation) {
+
+            var options = Validation.prototype.extendOptions({
+                onsubmit: false
+            });
+
+            expect(options.onsubmit).toBe(false);
+
+        }));
+
+    });
+
 });

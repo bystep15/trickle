@@ -22,13 +22,21 @@ define(function (require, exports, module) {
  
         this.$form = $form;
 
-        this.options = options;
+        this.options = this.extendOptions(options);
 
     }
 
     Validation.prototype = {
 
         constructor: Validation,
+
+        extendOptions: function (options) {
+
+            return $.extend({
+                onsubmit: true
+            }, options);
+
+        },
 
         // http://jqueryvalidation.org/validate/
         validate: function() {
